@@ -5,7 +5,8 @@
   "main": "./src/app.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
-    "start": "node ./src/app.js"
+    "start": "node ./src/app.js",
+    "config": "node ./src/deployCommands.js"
   },
   "repository": {
     "type": "git",

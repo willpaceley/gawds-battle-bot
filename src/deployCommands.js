@@ -10,7 +10,9 @@ const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
 
 // Create an array with names of each file in commands directory
 const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandFiles = fs
+  .readdirSync(commandsPath)
+  .filter((file) => file.endsWith('.js'));
 
 const commands = [];
 
@@ -23,6 +25,7 @@ for (const file of commandFiles) {
 
 const rest = new REST({ version: '9' }).setToken(DISCORD_TOKEN);
 
-rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands })
+rest
+  .put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands })
   .then(() => console.log('Successfully registered application commands.'))
   .catch(console.error);
