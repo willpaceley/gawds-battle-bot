@@ -1,0 +1,32 @@
+{
+  "name": "discord-bot-template",
+  "version": "1.0.0",
+  "description": "Starter template for a Discord bot using discord.js",
+  "main": "./src/app.js",
+  "scripts": {
+    "dev": "nodemon ./src/app.js",
+    "start": "node ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pace0033/discord-bot-starter.git"
+  },
+  "author": "Dubpace",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pace0033/discord-bot-starter/issues"
+  },
+  "homepage": "https://github.com/pace0033/discord-bot-starter#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.15.0",
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.33.5",
+    "discord.js": "^13.8.0",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.7.1"
+  }
+}
