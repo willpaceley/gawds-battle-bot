@@ -1,4 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
+const { determineCult } = require('../modules/cults');
+const powerSymbols = require('../modules/powerSymbols');
 const Gawd = require('../modules/Gawd');
 
 module.exports = {
@@ -17,7 +20,6 @@ module.exports = {
 
     // Check if user supplied a valid Gawd ID
     const gawdId = interaction.options.getInteger('id');
-
     if (gawdId <= 0 || gawdId > 5882) {
       await interaction.editReply('Please select an ID between 1 and 5882.');
       return;
@@ -25,9 +27,8 @@ module.exports = {
       await interaction.editReply('⚔️ Battle in progress! ⚔️');
     }
 
-    const battleName = `${interaction.user.username}'s Battle - Gawd ${gawdId}`;
-
     // create the battle thread
+    const battleName = `${interaction.user.username}'s Battle - Gawd ${gawdId}`;
     const thread = await interaction.channel.threads.create({
       name: battleName,
       autoArchiveDuration: 60,
@@ -38,8 +39,31 @@ module.exports = {
 
     const userGawd = new Gawd(gawdId);
     await userGawd.requestData();
-    console.log(userGawd);
 
-    await thread.send('ah sahhhhhh');
+    await thread.send(`You selected **${userGawd.name}** as your fighter! 👇`);
+
+    // create an embed to display the selected Gawd to the user
+    const userGawdEmbed = new MessageEmbed()
+      .setColor('#22C55E')
+      .setTitle(userGawd.name)
+      .setURL(userGawd.image)
+      .addFields(
+        { name: 'ID', value: String(userGawd.id), inline: true },
+        {
+          name: 'Cult',
+          value: determineCult(userGawd.dominantPower),
+          inline: true,
+        },
+        {
+          name: 'Dominant Power',
+          value: `${userGawd.dominantPower} ${
+            powerSymbols[userGawd.dominantPower]
+          }`,
+          inline: true,
+        }
+      )
+      .setImage(userGawd.image);
+
+    await thread.send({ embeds: [userGawdEmbed] });
   },
 };
