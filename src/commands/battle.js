@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const Gawd = require('../modules/Gawd');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,13 +19,10 @@ module.exports = {
     const gawdId = interaction.options.getInteger('id');
 
     if (gawdId <= 0 || gawdId > 5882) {
-      await interaction.editReply(
-        'Creating a battle thread and adding you to it. Good luck!'
-      );
+      await interaction.editReply('Please select an ID between 1 and 5882.');
+      return;
     } else {
-      await interaction.editReply(
-        'Creating a battle thread and adding you to it. Good luck!'
-      );
+      await interaction.editReply('⚔️ Battle in progress! ⚔️');
     }
 
     const battleName = `${interaction.user.username}'s Battle - Gawd ${gawdId}`;
@@ -35,12 +33,13 @@ module.exports = {
       autoArchiveDuration: 60,
       reason: 'Time to battle!',
     });
-
     // add user to the battle thread
     thread.members.add(interaction.user);
 
-    await thread.send('ah sahhhhhh');
+    const userGawd = new Gawd(gawdId);
+    await userGawd.requestData();
+    console.log(userGawd);
 
-    console.log(`Created thread: ${thread.name}`);
+    await thread.send('ah sahhhhhh');
   },
 };
