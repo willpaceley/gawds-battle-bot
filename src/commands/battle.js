@@ -9,6 +9,64 @@ function getRandomId() {
   return Math.floor(Math.random() * 5882 + 1);
 }
 
+async function sendVersusMessages(thread, userGawd, cpuGawd) {
+  await thread.send(`You selected **${userGawd.name}** as your fighter! 👇`);
+
+  // create an embed to display the selected Gawd to the user
+  const userGawdEmbed = new MessageEmbed()
+    .setColor('#22C55E')
+    .setTitle(userGawd.name)
+    .setURL(userGawd.image)
+    .addFields(
+      { name: 'ID', value: String(userGawd.id), inline: true },
+      {
+        name: 'Cult',
+        value: determineCult(userGawd.dominantPower),
+        inline: true,
+      },
+      {
+        name: 'Dominant Power',
+        value: `${userGawd.dominantPower} ${
+          powerSymbols[userGawd.dominantPower]
+        }`,
+        inline: true,
+      }
+    )
+    .setImage(userGawd.image);
+
+  await thread.send({ embeds: [userGawdEmbed] });
+
+  await thread.send('**VERSUS**');
+
+  // create an embed to display cpu opponent to the user
+  const cpuGawdEmbed = new MessageEmbed()
+    .setColor('#D0034C')
+    .setTitle(cpuGawd.name)
+    .setURL(cpuGawd.image)
+    .addFields(
+      { name: 'ID', value: String(cpuGawd.id), inline: true },
+      {
+        name: 'Cult',
+        value: determineCult(cpuGawd.dominantPower),
+        inline: true,
+      },
+      {
+        name: 'Dominant Power',
+        value: `${cpuGawd.dominantPower} ${
+          powerSymbols[cpuGawd.dominantPower]
+        }`,
+        inline: true,
+      }
+    )
+    .setImage(cpuGawd.image);
+
+  await thread.send({ embeds: [cpuGawdEmbed] });
+
+  await thread.send(
+    `The computer selected **${cpuGawd.name}** as your opponent! ☝️`
+  );
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('battle')
@@ -46,34 +104,6 @@ module.exports = {
     const userGawd = new Gawd(userGawdId);
     await userGawd.requestData();
 
-    await thread.send(`You selected **${userGawd.name}** as your fighter! 👇`);
-
-    // create an embed to display the selected Gawd to the user
-    const userGawdEmbed = new MessageEmbed()
-      .setColor('#22C55E')
-      .setTitle(userGawd.name)
-      .setURL(userGawd.image)
-      .addFields(
-        { name: 'ID', value: String(userGawd.id), inline: true },
-        {
-          name: 'Cult',
-          value: determineCult(userGawd.dominantPower),
-          inline: true,
-        },
-        {
-          name: 'Dominant Power',
-          value: `${userGawd.dominantPower} ${
-            powerSymbols[userGawd.dominantPower]
-          }`,
-          inline: true,
-        }
-      )
-      .setImage(userGawd.image);
-
-    await thread.send({ embeds: [userGawdEmbed] });
-
-    await thread.send('**VERSUS**');
-
     // Generate a randomized opponent controlled by the CPU
     // if the random ID is the same as user's ID, generate a new ID
     let cpuGawdId;
@@ -85,32 +115,7 @@ module.exports = {
     const cpuGawd = new Gawd(cpuGawdId);
     await cpuGawd.requestData();
 
-    // create an embed to display cpu opponent to the user
-    const cpuGawdEmbed = new MessageEmbed()
-      .setColor('#D0034C')
-      .setTitle(cpuGawd.name)
-      .setURL(cpuGawd.image)
-      .addFields(
-        { name: 'ID', value: String(cpuGawd.id), inline: true },
-        {
-          name: 'Cult',
-          value: determineCult(cpuGawd.dominantPower),
-          inline: true,
-        },
-        {
-          name: 'Dominant Power',
-          value: `${cpuGawd.dominantPower} ${
-            powerSymbols[cpuGawd.dominantPower]
-          }`,
-          inline: true,
-        }
-      )
-      .setImage(cpuGawd.image);
-
-    await thread.send({ embeds: [cpuGawdEmbed] });
-
-    await thread.send(
-      `The computer selected **${cpuGawd.name}** as your opponent! ☝️`
-    );
+    // Send VERSUS intro messages to thread
+    sendVersusMessages(thread, userGawd, cpuGawd);
   },
 };

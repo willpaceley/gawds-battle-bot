@@ -20,5 +20,14 @@ module.exports = class Gawd {
     this.name = data.name;
     this.image = data.image;
     this.dominantPower = data.dominantPower;
+    this.powers = this.getPowers(data.parts);
+  }
+
+  getPowers(partsArray) {
+    const powers = [];
+    partsArray.forEach((part) => {
+      powers.push(part.power);
+    });
+    return powers;
   }
 };
