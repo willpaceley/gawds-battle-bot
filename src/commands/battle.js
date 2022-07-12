@@ -1,7 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const { determineCult } = require('../modules/cults');
-const powerSymbols = require('../modules/powerSymbols');
 const Gawd = require('../modules/Gawd');
 
 // Returns a psuedorandom valid Gawd ID
@@ -11,57 +8,9 @@ function getRandomId() {
 
 async function sendVersusMessages(thread, userGawd, cpuGawd) {
   await thread.send(`You selected **${userGawd.name}** as your fighter! 👇`);
-
-  // create an embed to display the selected Gawd to the user
-  const userGawdEmbed = new MessageEmbed()
-    .setColor('#22C55E')
-    .setTitle(userGawd.name)
-    .setURL(userGawd.image)
-    .addFields(
-      { name: 'ID', value: String(userGawd.id), inline: true },
-      {
-        name: 'Cult',
-        value: determineCult(userGawd.dominantPower),
-        inline: true,
-      },
-      {
-        name: 'Dominant Power',
-        value: `${userGawd.dominantPower} ${
-          powerSymbols[userGawd.dominantPower]
-        }`,
-        inline: true,
-      }
-    )
-    .setImage(userGawd.image);
-
-  await thread.send({ embeds: [userGawdEmbed] });
-
+  await thread.send({ embeds: [userGawd.embed] });
   await thread.send('**VERSUS**');
-
-  // create an embed to display cpu opponent to the user
-  const cpuGawdEmbed = new MessageEmbed()
-    .setColor('#D0034C')
-    .setTitle(cpuGawd.name)
-    .setURL(cpuGawd.image)
-    .addFields(
-      { name: 'ID', value: String(cpuGawd.id), inline: true },
-      {
-        name: 'Cult',
-        value: determineCult(cpuGawd.dominantPower),
-        inline: true,
-      },
-      {
-        name: 'Dominant Power',
-        value: `${cpuGawd.dominantPower} ${
-          powerSymbols[cpuGawd.dominantPower]
-        }`,
-        inline: true,
-      }
-    )
-    .setImage(cpuGawd.image);
-
-  await thread.send({ embeds: [cpuGawdEmbed] });
-
+  await thread.send({ embeds: [cpuGawd.embed] });
   await thread.send(
     `The computer selected **${cpuGawd.name}** as your opponent! ☝️`
   );
@@ -112,7 +61,7 @@ module.exports = {
     } while (cpuGawdId === userGawdId);
 
     // create cpu Gawd object and populate with API data
-    const cpuGawd = new Gawd(cpuGawdId);
+    const cpuGawd = new Gawd(cpuGawdId, false);
     await cpuGawd.requestData();
 
     // Send VERSUS intro messages to thread
