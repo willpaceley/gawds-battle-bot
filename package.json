@@ -1,7 +1,7 @@
 {
   "name": "discord-bot-template",
   "version": "1.0.0",
-  "description": "Starter template for a Discord bot using discord.js",
+  "description": "Discord bot that enables users to battle a Gawd NFT against a computer-controlled Gawd.",
   "main": "./src/app.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pace0033/discord-bot-starter.git"
+    "url": "git+https://github.com/pace0033/gawds-battle-bot"
   },
   "author": "Dubpace",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pace0033/discord-bot-starter/issues"
+    "url": "https://github.com/pace0033/gawds-battle-bot/issues"
   },
-  "homepage": "https://github.com/pace0033/discord-bot-starter#readme",
+  "homepage": "https://github.com/pace0033/gawds-battle-bot#readme",
   "dependencies": {
     "@discordjs/builders": "^0.15.0",
     "@discordjs/rest": "^0.5.0",
