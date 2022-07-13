@@ -14,7 +14,7 @@ module.exports.getUserResponse = async function (thread) {
   const row = new MessageActionRow().addComponents([headsButton, tailsButton]);
 
   const coinFlipMessage = await thread.send({
-    content: '🪙 **Select Heads or Tails**',
+    content: '🪙 Select **Heads** or **Tails**. Winner goes first!',
     components: [row],
   });
 
@@ -52,9 +52,6 @@ module.exports.getUserResponse = async function (thread) {
 };
 
 // Return true if user won
-module.exports.getWinner = async function (thread, userChoice) {
-  await thread.send('Flipping coin...');
-  const flipResult = Math.random() > 0.5 ? 'heads' : 'tails';
-
-  return flipResult === userChoice ? true : false;
+module.exports.flip = function () {
+  return Math.random() > 0.5 ? 'heads' : 'tails';
 };

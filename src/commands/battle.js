@@ -8,13 +8,24 @@ function getRandomId() {
 }
 
 async function sendVersusMessages(thread, userGawd, cpuGawd) {
-  await thread.send(`You selected *${userGawd.name}* as your fighter! 👇`);
+  await thread.send(`You selected *${userGawd.name}* as your fighter!`);
   await thread.send({ embeds: [userGawd.embed] });
   await thread.send('**VERSUS**');
   await thread.send({ embeds: [cpuGawd.embed] });
   await thread.send(
-    `The computer selected *${cpuGawd.name}* as your opponent! ☝️`
+    `The computer selected *${cpuGawd.name}* as your opponent!`
   );
+}
+
+async function startCoinFlip(thread) {
+  const userCalledSide = await coinFlip.getUserResponse(thread);
+  await thread.send('Flipping coin...');
+  const flipResult = coinFlip.flip();
+  const userWon = userCalledSide === flipResult ? true : false;
+  userWon
+    ? await thread.send(`🎉 The coin landed on **${flipResult}**. You won!`)
+    : await thread.send(`😔 The coin landed on **${flipResult}**. You lost.`);
+  return userWon;
 }
 
 module.exports = {
@@ -71,16 +82,7 @@ module.exports = {
     await sendVersusMessages(thread, userGawd, cpuGawd);
 
     // Flip a coin to determine who goes first
-    const userCalledSide = await coinFlip.getUserResponse(thread);
-    console.log(userCalledSide);
-    const userWin = await coinFlip.getWinner(thread, userCalledSide);
-    console.log(userWin);
-    userWin
-      ? await thread.send(
-          `🎉 The coin landed on **${userCalledSide}**. You won!`
-        )
-      : await thread.send(
-          `😔 The coin landed on **${userCalledSide}**. You lost.`
-        );
+    const userWon = await startCoinFlip(thread);
+    console.log(userWon);
   },
 };
