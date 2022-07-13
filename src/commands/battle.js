@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Gawd = require('../modules/Gawd');
+const coinFlip = require('../modules/coinFlip');
 
 // Returns a psuedorandom valid Gawd ID
 function getRandomId() {
@@ -7,12 +8,12 @@ function getRandomId() {
 }
 
 async function sendVersusMessages(thread, userGawd, cpuGawd) {
-  await thread.send(`You selected **${userGawd.name}** as your fighter! 👇`);
+  await thread.send(`You selected *${userGawd.name}* as your fighter! 👇`);
   await thread.send({ embeds: [userGawd.embed] });
   await thread.send('**VERSUS**');
   await thread.send({ embeds: [cpuGawd.embed] });
   await thread.send(
-    `The computer selected **${cpuGawd.name}** as your opponent! ☝️`
+    `The computer selected *${cpuGawd.name}* as your opponent! ☝️`
   );
 }
 
@@ -65,6 +66,10 @@ module.exports = {
     await cpuGawd.requestData();
 
     // Send VERSUS intro messages to thread
-    sendVersusMessages(thread, userGawd, cpuGawd);
+    await sendVersusMessages(thread, userGawd, cpuGawd);
+
+    /* BUTTON EXPERIMENTATION TIME */
+    const userCalledSide = await coinFlip.getUserResponse(thread);
+    console.log(userCalledSide);
   },
 };
