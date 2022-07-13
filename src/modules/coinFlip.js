@@ -50,3 +50,11 @@ module.exports.getUserResponse = async function (thread) {
       throw new Error(`⚠️ ERROR: ${err.message}`);
     });
 };
+
+// Return true if user won
+module.exports.getWinner = async function (thread, userChoice) {
+  await thread.send('Flipping coin...');
+  const flipResult = Math.random() > 0.5 ? 'heads' : 'tails';
+
+  return flipResult === userChoice ? true : false;
+};

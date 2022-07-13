@@ -29,12 +29,14 @@ module.exports = {
     ),
   async execute(interaction) {
     // Immediately deferReply() so interaction token doesn't expire during battle
-    await interaction.deferReply();
+    await interaction.deferReply({ ephemeral: true });
 
     // Check if user supplied a valid Gawd ID
     const userGawdId = interaction.options.getInteger('id');
     if (userGawdId <= 0 || userGawdId > 5882) {
-      await interaction.editReply('Please select an ID between 1 and 5882.');
+      await interaction.editReply(
+        'Please try again with an ID between 1 and 5882.'
+      );
       return;
     } else {
       await interaction.editReply('⚔️ Battle in progress! ⚔️');
@@ -68,8 +70,17 @@ module.exports = {
     // Send VERSUS intro messages to thread
     await sendVersusMessages(thread, userGawd, cpuGawd);
 
-    /* BUTTON EXPERIMENTATION TIME */
+    // Flip a coin to determine who goes first
     const userCalledSide = await coinFlip.getUserResponse(thread);
     console.log(userCalledSide);
+    const userWin = await coinFlip.getWinner(thread, userCalledSide);
+    console.log(userWin);
+    userWin
+      ? await thread.send(
+          `🎉 The coin landed on **${userCalledSide}**. You won!`
+        )
+      : await thread.send(
+          `😔 The coin landed on **${userCalledSide}**. You lost.`
+        );
   },
 };
