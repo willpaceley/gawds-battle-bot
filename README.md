@@ -16,11 +16,27 @@ Each Battle starts with a coin flip to determine who will attack first.
 
 ## Game Mechanics
 
+### Cult Vulnerabilities
+
+The Gawds universe is divided up amongst three different cults: 🩸 Arcane, 🌙 Terrene, and ✨ Astral. **Gawds Battles features a rock-paper-scissors vulnerability mechanic where each cult is strong against one cult but weak against the other.**
+
+| Cult       | Strong Against | Weak Against |
+| ---------- | -------------- | ------------ |
+| 🩸 Arcane  | ✨ Astral      | 🌙 Terrene   |
+| 🌙 Terrene | 🩸 Arcane      | ✨ Astral    |
+| ✨ Astral  | 🌙 Terrene     | 🩸 Arcane    |
+
+If you attack with a Power that is strong against your opponent's cult, it will boost your damage. Conversely, if you attack with a Power that is weak against your opponent your damage will be reduced.
+
+Each Power (attack) and every Gawd is associated with a cult. It's important to consider the cult of your opponent when selecting which Power to use. For example:
+
+> Your opponent's Gawd is ✨ Astral. If you attack using a Power that is 🌙 Terrene, you get a boost to your damage. If you attack using a Power that is 🩸 Arcane, your damage will be reduced.
+
 ### Powers
 
 Each Gawd comes equipped with 4-6 powers. **Powers function as attacks in the Gawds Battle game.** The powers of each Gawd are determined by their randomly generated traits, so some Gawds may have several duplicates of the same power.
 
-Every Power has an associated **Passive**. A Passive is a boost to your combat that is immediately applied to the damage calculations when you attack with a given Power. There are six different Passives, and all three cults have access to the same six Passives. See table below for reference.
+Every Power has an associated **Passive**. A Passive is a boost to your combat that is immediately applied to the damage calculations when you attack with a given Power. There are six different Passives, and all three cults have access to the same six Passives.
 
 | Icon | Power      | Cult       | Passive              |
 | ---- | ---------- | ---------- | -------------------- |
