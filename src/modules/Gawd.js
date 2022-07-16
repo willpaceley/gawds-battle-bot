@@ -12,11 +12,11 @@ module.exports = class Gawd {
   }
 
   async requestData() {
-    const data = await fetch(`https://www.gawds.xyz/api/gawds/${this.id}`).then(
+    const data = await fetch(`https://www.gawds.xyz/api/awds/${this.id}`).then(
       (response) => {
         // Check if the API returns a Gawd for the ID specified
         if (!response.ok) {
-          throw new Error(`No Gawd found with ID ${this.id}`);
+          throw new Error('A problem occurred calling the Gawds API.');
         }
         return response.json();
       }

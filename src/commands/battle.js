@@ -7,6 +7,21 @@ function getRandomId() {
   return Math.floor(Math.random() * 5882 + 1);
 }
 
+// Check if user supplied a valid Gawd ID
+function isValidId(id) {
+  return id > 0 && id < 5883;
+}
+
+async function createThread(interaction, id) {
+  const battleName = `${interaction.user.username}'s Battle - Gawd ${id}`;
+  await interaction.editReply(`🧵 Creating new thread: ${battleName}`);
+  return await interaction.channel.threads.create({
+    name: battleName,
+    autoArchiveDuration: 60,
+    reason: 'Time to battle!',
+  });
+}
+
 async function sendVersusMessages(thread, userGawd, cpuGawd) {
   await thread.send(`You selected *${userGawd.name}* as your fighter!`);
   await thread.send({ embeds: [userGawd.embed] });
@@ -44,29 +59,13 @@ module.exports = {
 
     // Check if user supplied a valid Gawd ID
     const userGawdId = interaction.options.getInteger('id');
-    if (userGawdId <= 0 || userGawdId > 5882) {
+    if (!isValidId(userGawdId)) {
+      // If ID is not valid, provide user feedback and exit battle
       await interaction.editReply(
-        'Please try again with an ID between 1 and 5882.'
+        '⚠️ Invalid ID. Start a new battle with an ID between 1 and 5882.'
       );
       return;
-    } else {
-      await interaction.editReply('⚔️ Battle in progress! ⚔️');
     }
-
-    // create the battle thread
-    const battleName = `${interaction.user.username}'s Battle - Gawd ${userGawdId}`;
-    const thread = await interaction.channel.threads.create({
-      name: battleName,
-      autoArchiveDuration: 60,
-      reason: 'Time to battle!',
-    });
-    // add user to the battle thread
-    thread.members.add(interaction.user);
-
-    // create user Gawd object and populate with API data
-    const userGawd = new Gawd(userGawdId);
-    await userGawd.requestData();
-
     // Generate a randomized opponent controlled by the CPU
     // if the random ID is the same as user's ID, generate a new ID
     let cpuGawdId;
@@ -74,9 +73,25 @@ module.exports = {
       cpuGawdId = getRandomId();
     } while (cpuGawdId === userGawdId);
 
-    // create cpu Gawd object and populate with API data
+    // create user and CPU Gawd objects
+    const userGawd = new Gawd(userGawdId);
     const cpuGawd = new Gawd(cpuGawdId, false);
-    await cpuGawd.requestData();
+
+    // Populate Gawd objects by calling Gawds.xyz API
+    try {
+      await userGawd.requestData();
+      await cpuGawd.requestData();
+    } catch (error) {
+      // If there is a problem calling the API
+      // Alert the user, delete the thread, and exit battle
+      await interaction.editReply(`⚠️ ERROR: ${error.message}`);
+      return;
+    }
+
+    // create the battle thread
+    const thread = await createThread(interaction, userGawdId);
+    // add user to the battle thread
+    await thread.members.add(interaction.user);
 
     // Send VERSUS intro messages to thread
     await sendVersusMessages(thread, userGawd, cpuGawd);
