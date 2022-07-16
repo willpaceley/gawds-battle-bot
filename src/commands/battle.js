@@ -82,8 +82,7 @@ module.exports = {
       await userGawd.requestData();
       await cpuGawd.requestData();
     } catch (error) {
-      // If there is a problem calling the API
-      // Alert the user, delete the thread, and exit battle
+      // If problem calling the API, alert user and exit battle
       await interaction.editReply(`⚠️ ERROR: ${error.message}`);
       return;
     }

@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const { determineCult } = require('../modules/cults');
-const powerSymbols = require('../modules/powerSymbols');
+const powers = require('../modules/powers');
 
 module.exports = class Gawd {
   constructor(id, isUser = true) {
@@ -12,7 +12,7 @@ module.exports = class Gawd {
   }
 
   async requestData() {
-    const data = await fetch(`https://www.gawds.xyz/api/awds/${this.id}`).then(
+    const data = await fetch(`https://www.gawds.xyz/api/gawds/${this.id}`).then(
       (response) => {
         // Check if the API returns a Gawd for the ID specified
         if (!response.ok) {
@@ -43,7 +43,7 @@ module.exports = class Gawd {
         },
         {
           name: 'Dominant Power',
-          value: `${this.dominantPower} ${powerSymbols[this.dominantPower]}`,
+          value: `${this.dominantPower} ${powers[this.dominantPower].icon}`,
           inline: true,
         }
       )
@@ -51,10 +51,10 @@ module.exports = class Gawd {
   }
 
   getPowers(partsArray) {
-    const powers = [];
+    const gawdPowers = [];
     partsArray.forEach((part) => {
-      powers.push(part.power);
+      gawdPowers.push(part.power);
     });
-    return powers;
+    return gawdPowers;
   }
 };
