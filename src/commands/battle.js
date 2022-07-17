@@ -54,55 +54,44 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    // Immediately deferReply() so interaction token doesn't expire during battle
-    await interaction.deferReply({ ephemeral: true });
-
-    // Check if user supplied a valid Gawd ID
-    const userGawdId = interaction.options.getInteger('id');
-    if (!isValidId(userGawdId)) {
-      // If ID is not valid, provide user feedback and exit battle
-      await interaction.editReply(
-        '⚠️ Invalid ID. Start a new battle with an ID between 1 and 5882.'
-      );
-      return;
-    }
-    // Generate a randomized opponent controlled by the CPU
-    // if the random ID is the same as user's ID, generate a new ID
-    let cpuGawdId;
-    do {
-      cpuGawdId = getRandomId();
-    } while (cpuGawdId === userGawdId);
-
-    // create user and CPU Gawd objects
-    const userGawd = new Gawd(userGawdId);
-    const cpuGawd = new Gawd(cpuGawdId, false);
-
-    // Populate Gawd objects by calling Gawds.xyz API
     try {
+      // Immediately deferReply() so interaction token doesn't expire during battle
+      await interaction.deferReply({ ephemeral: true });
+      // Check if user supplied a valid Gawd ID
+      const userGawdId = interaction.options.getInteger('id');
+      if (!isValidId(userGawdId)) {
+        // If ID is not valid, provide user feedback and exit battle
+        throw new RangeError(
+          'Invalid ID. Start a new battle with an ID between 1 and 5882.'
+        );
+      }
+      // Generate a randomized opponent controlled by the CPU
+      // if the random ID is the same as user's ID, generate a new ID
+      let cpuGawdId;
+      do {
+        cpuGawdId = getRandomId();
+      } while (cpuGawdId === userGawdId);
+
+      // create user and CPU Gawd objects
+      const userGawd = new Gawd(userGawdId);
+      const cpuGawd = new Gawd(cpuGawdId, false);
+      // Populate Gawd objects by calling Gawds.xyz API
       await userGawd.requestData();
       await cpuGawd.requestData();
-    } catch (error) {
-      // If problem calling the API, alert user and exit battle
-      await interaction.editReply(`⚠️ ERROR: ${error.message}`);
-      return;
-    }
 
-    // create the battle thread
-    const thread = await createThread(interaction, userGawdId);
-    // add user to the battle thread
-    await thread.members.add(interaction.user);
+      // create the battle thread
+      const thread = await createThread(interaction, userGawdId);
+      // add user to the battle thread
+      await thread.members.add(interaction.user);
 
-    // Send VERSUS intro messages to thread
-    await sendVersusMessages(thread, userGawd, cpuGawd);
+      // Send VERSUS intro messages to thread
+      await sendVersusMessages(thread, userGawd, cpuGawd);
 
-    // Flip a coin to determine who goes first
-    try {
-      // Anything with a collector can expire and throw an error,
-      // So it's important to wrap in try/catch blocks
+      // Flip a coin to determine who goes first
       const userWon = await startCoinFlip(thread);
       console.log(userWon);
     } catch (error) {
-      await interaction.editReply(`⚠️ **ERROR** - ${error.message}`);
+      await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;
     }
   },

@@ -23,7 +23,7 @@ module.exports.getUserResponse = async function (thread) {
   return coinFlipMessage
     .awaitMessageComponent({
       componentType: 'BUTTON',
-      time: 120000,
+      time: 300000,
     })
     .then(async (i) => {
       // Defer the interaction so the token doesn't expire
