@@ -1,28 +1,23 @@
-module.exports.cults = [
-  {
-    name: 'Arcane 🩸',
-    powers: ['Divine', 'Chaos', 'Mystic', 'Dark', 'Spirit', 'Oblivion'],
+module.exports = {
+  Arcane: {
+    name: 'Arcane',
+    label: 'Arcane 🩸',
+    icon: '🩸',
+    strongAgainst: 'Astral',
+    weakAgainst: 'Terrene',
   },
-  {
-    name: 'Terrene 🌙',
-    powers: ['Corporeal', 'Creature', 'Verdure', 'Toxic', 'Mundane', 'Aqueous'],
+  Terrene: {
+    name: 'Terrene',
+    label: 'Terrene 🌙',
+    icon: '🌙',
+    strongAgainst: 'Arcane',
+    weakAgainst: 'Astral',
   },
-  {
-    name: 'Astral ✨',
-    powers: [
-      'Cosmos',
-      'Inferno',
-      'Geological',
-      'Automoton',
-      'Numerary',
-      'Alchemy',
-    ],
+  Astral: {
+    name: 'Astral',
+    label: 'Astral ✨',
+    icon: '✨',
+    strongAgainst: 'Terrene',
+    weakAgainst: 'Arcane',
   },
-];
-
-module.exports.determineCult = function (dominantPower) {
-  const cultMatch = module.exports.cults.find((cult) =>
-    cult.powers.includes(dominantPower)
-  );
-  return cultMatch.name;
 };

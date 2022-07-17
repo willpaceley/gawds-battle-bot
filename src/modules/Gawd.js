@@ -1,7 +1,14 @@
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
-const { determineCult } = require('../modules/cults');
 const powers = require('../modules/powers');
+
+function getPowers(partsArray) {
+  const gawdPowers = [];
+  partsArray.forEach((part) => {
+    gawdPowers.push(part.power);
+  });
+  return gawdPowers;
+}
 
 module.exports = class Gawd {
   constructor(id, isUser = true) {
@@ -23,12 +30,13 @@ module.exports = class Gawd {
     );
     this.name = data.name;
     this.image = data.image;
-    this.dominantPower = data.dominantPower;
-    this.powers = this.getPowers(data.parts);
-    this.embed = this.getMessageEmbed();
+    this.dominantPower = powers[data.dominantPower];
+    this.cult = this.dominantPower.cult;
+    this.powers = getPowers(data.parts);
+    this.versusEmbed = this.createVersusEmbed();
   }
 
-  getMessageEmbed() {
+  createVersusEmbed() {
     const color = this.isUser ? '#22C55E' : '#D0034C';
     return new MessageEmbed()
       .setColor(color)
@@ -38,23 +46,15 @@ module.exports = class Gawd {
         { name: 'ID', value: String(this.id), inline: true },
         {
           name: 'Cult',
-          value: determineCult(this.dominantPower),
+          value: this.cult.label,
           inline: true,
         },
         {
           name: 'Dominant Power',
-          value: `${this.dominantPower} ${powers[this.dominantPower].icon}`,
+          value: this.dominantPower.label,
           inline: true,
         }
       )
       .setImage(this.image);
-  }
-
-  getPowers(partsArray) {
-    const gawdPowers = [];
-    partsArray.forEach((part) => {
-      gawdPowers.push(part.power);
-    });
-    return gawdPowers;
   }
 };

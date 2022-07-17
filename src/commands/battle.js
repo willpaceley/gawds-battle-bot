@@ -24,9 +24,9 @@ async function createThread(interaction, id) {
 
 async function sendVersusMessages(thread, userGawd, cpuGawd) {
   await thread.send(`You selected *${userGawd.name}* as your fighter!`);
-  await thread.send({ embeds: [userGawd.embed] });
+  await thread.send({ embeds: [userGawd.versusEmbed] });
   await thread.send('**VERSUS**');
-  await thread.send({ embeds: [cpuGawd.embed] });
+  await thread.send({ embeds: [cpuGawd.versusEmbed] });
   await thread.send(
     `The computer selected *${cpuGawd.name}* as your opponent!`
   );

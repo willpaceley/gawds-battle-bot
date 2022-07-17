@@ -1,7 +1,7 @@
 {
   "name": "discord-bot-template",
   "version": "1.0.0",
-  "description": "Discord bot that enables users to battle a Gawd NFT against a computer-controlled Gawd.",
+  "description": "Turn-based PvE battle game using Gawds.xyz assets. Discord bot built with discord.js.",
   "main": "./src/app.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
