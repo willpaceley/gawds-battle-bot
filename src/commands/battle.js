@@ -32,8 +32,8 @@ async function sendVersusMessages(thread, userGawd, cpuGawd) {
   );
 }
 
-async function startCoinFlip(thread) {
-  const userCalledSide = await coinFlip.getUserResponse(thread);
+async function startCoinFlip(interaction, thread) {
+  const userCalledSide = await coinFlip.getUserResponse(interaction, thread);
   await thread.send('Flipping coin...');
   const flipResult = coinFlip.flip();
   const userWon = userCalledSide === flipResult ? true : false;
@@ -88,7 +88,7 @@ module.exports = {
       await sendVersusMessages(thread, userGawd, cpuGawd);
 
       // Flip a coin to determine who goes first
-      const userWon = await startCoinFlip(thread);
+      const userWon = await startCoinFlip(interaction, thread);
       console.log(userWon);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);

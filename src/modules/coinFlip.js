@@ -1,6 +1,6 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 
-module.exports.getUserResponse = async function (thread) {
+module.exports.getUserResponse = async function (interaction, thread) {
   const headsButton = new MessageButton()
     .setCustomId('heads')
     .setLabel('Heads')
@@ -20,15 +20,20 @@ module.exports.getUserResponse = async function (thread) {
     components: [row],
   });
 
+  const filter = (i) => {
+    // Defer the interaction so the token doesn't expire
+    i.deferUpdate();
+    // Only let the user that created the battle click a button
+    return i.user.id === interaction.user.id;
+  };
+
   return coinFlipMessage
     .awaitMessageComponent({
+      filter,
       componentType: 'BUTTON',
       time: 300000,
     })
     .then(async (i) => {
-      // Defer the interaction so the token doesn't expire
-      await i.deferUpdate();
-
       // Disable buttons
       buttons.forEach((button) => button.setDisabled());
       // Display user selection by changing button color to green
