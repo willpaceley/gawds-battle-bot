@@ -54,7 +54,7 @@ module.exports.getUserResponse = async function (thread) {
       const errorButtonRow = new MessageActionRow().addComponents(buttons);
 
       await coinFlipMessage.edit({
-        content: `⚠️ ERROR: ${error.message}`,
+        content: `⚠️ **ERROR** - ${error.message}`,
         components: [errorButtonRow],
       });
 

@@ -102,7 +102,7 @@ module.exports = {
       const userWon = await startCoinFlip(thread);
       console.log(userWon);
     } catch (error) {
-      await interaction.editReply(`⚠️ ERROR: ${error.message}`);
+      await interaction.editReply(`⚠️ **ERROR** - ${error.message}`);
       return;
     }
   },

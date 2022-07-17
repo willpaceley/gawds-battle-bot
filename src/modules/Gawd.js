@@ -33,7 +33,7 @@ module.exports = class Gawd {
     return new MessageEmbed()
       .setColor(color)
       .setTitle(this.name)
-      .setURL(this.image)
+      .setURL(`https://www.gawds.xyz/gallery/${this.id}`)
       .addFields(
         { name: 'ID', value: String(this.id), inline: true },
         {
