@@ -3,11 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const powers = require('../modules/powers');
 
 function getPowers(partsArray) {
-  const gawdPowers = [];
-  partsArray.forEach((part) => {
-    gawdPowers.push(part.power);
-  });
-  return gawdPowers;
+  return partsArray.map((part) => powers[part.power]);
 }
 
 module.exports = class Gawd {
