@@ -11,6 +11,8 @@ module.exports.getUserResponse = async function (thread) {
     .setLabel('Tails')
     .setStyle('PRIMARY');
 
+  const buttons = [headsButton, tailsButton];
+
   const row = new MessageActionRow().addComponents([headsButton, tailsButton]);
 
   const coinFlipMessage = await thread.send({
@@ -21,24 +23,20 @@ module.exports.getUserResponse = async function (thread) {
   return coinFlipMessage
     .awaitMessageComponent({
       componentType: 'BUTTON',
-      time: 60000,
+      time: 120000,
     })
     .then(async (i) => {
       // Defer the interaction so the token doesn't expire
       await i.deferUpdate();
 
       // Disable buttons
-      headsButton.setDisabled();
-      tailsButton.setDisabled();
+      buttons.forEach((button) => button.setDisabled());
       // Display user selection by changing button color to green
       i.customId === 'heads'
         ? headsButton.setStyle('SUCCESS')
         : tailsButton.setStyle('SUCCESS');
 
-      const updatedRow = new MessageActionRow().addComponents([
-        headsButton,
-        tailsButton,
-      ]);
+      const updatedRow = new MessageActionRow().addComponents(buttons);
       await coinFlipMessage.edit({
         content: `You selected **${i.customId}**!`,
         components: [updatedRow],
@@ -46,8 +44,21 @@ module.exports.getUserResponse = async function (thread) {
       await i.editReply(`You selected **${i.customId}**!`);
       return i.customId;
     })
-    .catch((err) => {
-      throw new Error(`⚠️ ERROR: ${err.message}`);
+    .catch(async (error) => {
+      // Disable buttons and set to red to indicate error
+      buttons.forEach((button) => {
+        button.setDisabled();
+        button.setStyle('DANGER');
+      });
+
+      const errorButtonRow = new MessageActionRow().addComponents(buttons);
+
+      await coinFlipMessage.edit({
+        content: `⚠️ ERROR: ${error.message}`,
+        components: [errorButtonRow],
+      });
+
+      throw new Error(error.message);
     });
 };
 

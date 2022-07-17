@@ -96,7 +96,14 @@ module.exports = {
     await sendVersusMessages(thread, userGawd, cpuGawd);
 
     // Flip a coin to determine who goes first
-    const userWon = await startCoinFlip(thread);
-    console.log(userWon);
+    try {
+      // Anything with a collector can expire and throw an error,
+      // So it's important to wrap in try/catch blocks
+      const userWon = await startCoinFlip(thread);
+      console.log(userWon);
+    } catch (error) {
+      await interaction.editReply(`⚠️ ERROR: ${error.message}`);
+      return;
+    }
   },
 };
