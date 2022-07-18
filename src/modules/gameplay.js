@@ -1,4 +1,5 @@
 const coinFlip = require('../modules/coinFlip');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   createThread: async function (interaction, id) {
@@ -36,5 +37,25 @@ module.exports = {
     await thread.send(`Adding 10 HP to ${loser} to offset winner's advantage.`);
     // Set winner to be the attacker for the first turn
     userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
+  },
+  userAttack: async function (thread, turn, userGawd, cpuGawd) {
+    console.log('reached userAttack function');
+    const attackEmbed = new MessageEmbed()
+      .setColor('#22C55E')
+      .setTitle(`Turn #${turn} - You Attack`)
+      .setDescription(
+        'Click on a button below to attack with one of your Powers.'
+      )
+      .setThumbnail(userGawd.image)
+      .addFields(
+        { name: 'CPU Health', value: `❤️ ${cpuGawd.health}`, inline: true },
+        {
+          name: 'CPU Cult',
+          value: cpuGawd.cult.label,
+          inline: true,
+        }
+      );
+    await thread.send({ embeds: [attackEmbed] });
+    console.log('end of userAttack');
   },
 };

@@ -60,6 +60,10 @@ module.exports = {
       const userWon = await gameplay.getCoinFlipWinner(interaction, thread);
       // Set initial state of battle based on winner of coin flip
       await gameplay.setInitialState(thread, userWon, userGawd, cpuGawd);
+
+      const turn = 1;
+      // We need to figure out how to loop while userGawd || cpuGawd health > 0
+      await gameplay.userAttack(thread, turn, userGawd, cpuGawd);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;
