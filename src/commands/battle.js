@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const Gawd = require('../modules/Gawd');
-const coinFlip = require('../modules/coinFlip');
+const gameplay = require('../modules/gameplay');
 
 // Returns a psuedorandom valid Gawd ID
 function getRandomId() {
@@ -10,37 +10,6 @@ function getRandomId() {
 // Check if user supplied a valid Gawd ID
 function isValidId(id) {
   return id > 0 && id < 5883;
-}
-
-async function createThread(interaction, id) {
-  const battleName = `${interaction.user.username}'s Battle - Gawd ${id}`;
-  await interaction.editReply(`🧵 Creating new thread: ${battleName}`);
-  return await interaction.channel.threads.create({
-    name: battleName,
-    autoArchiveDuration: 60,
-    reason: 'Time to battle!',
-  });
-}
-
-async function sendVersusMessages(thread, userGawd, cpuGawd) {
-  await thread.send(`You selected *${userGawd.name}* as your fighter!`);
-  await thread.send({ embeds: [userGawd.versusEmbed] });
-  await thread.send('**VERSUS**');
-  await thread.send({ embeds: [cpuGawd.versusEmbed] });
-  await thread.send(
-    `The computer selected *${cpuGawd.name}* as your opponent!`
-  );
-}
-
-async function startCoinFlip(interaction, thread) {
-  const userCalledSide = await coinFlip.getUserResponse(interaction, thread);
-  await thread.send('Flipping coin...');
-  const flipResult = coinFlip.flip();
-  const userWon = userCalledSide === flipResult ? true : false;
-  userWon
-    ? await thread.send(`🎉 The coin landed on **${flipResult}**. You won!`)
-    : await thread.send(`😔 The coin landed on **${flipResult}**. You lost.`);
-  return userWon;
 }
 
 module.exports = {
@@ -80,15 +49,15 @@ module.exports = {
       await cpuGawd.requestData();
 
       // create the battle thread
-      const thread = await createThread(interaction, userGawdId);
+      const thread = await gameplay.createThread(interaction, userGawdId);
       // add user to the battle thread
       await thread.members.add(interaction.user);
 
       // Send VERSUS intro messages to thread
-      await sendVersusMessages(thread, userGawd, cpuGawd);
+      await gameplay.sendVersusMessages(thread, userGawd, cpuGawd);
 
       // Flip a coin to determine who goes first
-      const userWon = await startCoinFlip(interaction, thread);
+      const userWon = await gameplay.getCoinFlipWinner(interaction, thread);
       console.log(userWon);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
