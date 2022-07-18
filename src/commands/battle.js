@@ -58,7 +58,8 @@ module.exports = {
 
       // Flip a coin to determine who goes first
       const userWon = await gameplay.getCoinFlipWinner(interaction, thread);
-      console.log(userWon);
+      // Set initial state of battle based on winner of coin flip
+      await gameplay.setInitialState(thread, userWon, userGawd, cpuGawd);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;

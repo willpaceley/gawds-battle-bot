@@ -21,12 +21,20 @@ module.exports = {
   },
   getCoinFlipWinner: async function (interaction, thread) {
     const userCalledSide = await coinFlip.getUserResponse(interaction, thread);
-    await thread.send('Flipping coin...');
+    await thread.send('*Flipping coin...*');
     const flipResult = coinFlip.flip();
     const userWon = userCalledSide === flipResult ? true : false;
     userWon
       ? await thread.send(`🎉 The coin landed on **${flipResult}**. You won!`)
       : await thread.send(`😔 The coin landed on **${flipResult}**. You lost.`);
     return userWon;
+  },
+  setInitialState: async function (thread, userWon, userGawd, cpuGawd) {
+    // Add 10 HP to losing Gawd to offset winner's advantage
+    userWon ? (cpuGawd.health += 10) : (userGawd.health += 10);
+    const loser = userWon ? "your opponent's Gawd" : 'your Gawd';
+    await thread.send(`Adding 10 HP to ${loser} to offset winner's advantage.`);
+    // Set winner to be the attacker for the first turn
+    userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
   },
 };

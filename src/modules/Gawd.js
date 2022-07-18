@@ -12,6 +12,7 @@ module.exports = class Gawd {
     this.health = 100;
     this.alive = true;
     this.isUser = isUser;
+    this.isAttacker = false;
   }
 
   async requestData() {
