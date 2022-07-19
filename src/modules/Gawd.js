@@ -30,6 +30,7 @@ module.exports = class Gawd {
     this.dominantPower = powers[data.dominantPower];
     this.cult = this.dominantPower.cult;
     this.powers = getPowers(data.parts);
+    this.availablePowers = this.powers;
     this.versusEmbed = this.createVersusEmbed();
   }
 

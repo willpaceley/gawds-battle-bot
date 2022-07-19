@@ -1,9 +1,3 @@
-function getRandomPassive() {
-  const passives = ['heal', 'hit', 'crit', 'dodge', 'damage'];
-  const randomIndex = Math.floor(Math.random() * 5);
-  return module.exports[passives[randomIndex]];
-}
-
 module.exports = {
   heal: {
     type: 'heal',
@@ -30,5 +24,9 @@ module.exports = {
     value: 2.5,
     description: '+2.5 Damage',
   },
-  random: getRandomPassive(),
+  random: {
+    type: 'random',
+    value: undefined,
+    description: 'Random Passive',
+  },
 };

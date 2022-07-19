@@ -1,5 +1,24 @@
-const coinFlip = require('../modules/coinFlip');
 const { MessageEmbed } = require('discord.js');
+const coinFlip = require('../modules/coinFlip');
+
+// function getRandomType() {
+//   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
+//   const randomIndex = Math.floor(Math.random() * 5);
+//   return passiveTypes[randomIndex];
+// }
+
+function getPowerEmbedFields(powersArray) {
+  // Display powers as inline if there more than 5
+  const shouldBeInline = powersArray.length > 5;
+  // Create an array of EmbedFields
+  return powersArray.map((power) => {
+    return {
+      name: power.label,
+      value: power.passive.description,
+      inline: shouldBeInline,
+    };
+  });
+}
 
 module.exports = {
   createThread: async function (interaction, id) {
@@ -39,10 +58,10 @@ module.exports = {
     userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
   },
   userAttack: async function (thread, turn, userGawd, cpuGawd) {
-    console.log('reached userAttack function');
+    const userPowerEmbedFields = getPowerEmbedFields(userGawd.availablePowers);
     const attackEmbed = new MessageEmbed()
       .setColor('#22C55E')
-      .setTitle(`Turn #${turn} - You Attack`)
+      .setTitle(`Turn #${turn} - Attacking`)
       .setDescription(
         'Click on a button below to attack with one of your Powers.'
       )
@@ -53,9 +72,10 @@ module.exports = {
           name: 'CPU Cult',
           value: cpuGawd.cult.label,
           inline: true,
-        }
+        },
+        { name: '\u200B', value: '**Available Powers**' },
+        userPowerEmbedFields
       );
     await thread.send({ embeds: [attackEmbed] });
-    console.log('end of userAttack');
   },
 };
