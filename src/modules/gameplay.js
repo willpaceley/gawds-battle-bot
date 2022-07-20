@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const coinFlip = require('../modules/coinFlip');
 
 // function getRandomType() {
@@ -18,6 +18,27 @@ function getPowerEmbedFields(powersArray) {
       inline: shouldBeInline,
     };
   });
+}
+
+function getPowersButtons(availablePowers) {
+  return availablePowers.map((power) => {
+    // custom ID needs to be unique
+    const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
+    return new MessageButton()
+      .setCustomId(customId)
+      .setLabel(
+        `${power.count > 1 ? power.count + 'x  ' : ''}
+        ${power.cult.icon} ${power.name} `
+      )
+      .setStyle('PRIMARY');
+  });
+}
+
+function getPowersRow(buttonsArray) {
+  // const powerRowArray = []
+  // There can only be 5 buttons in an ActionRow
+  // TODO: Handle for this later
+  return [new MessageActionRow().addComponents(buttonsArray)];
 }
 
 module.exports = {
@@ -58,6 +79,12 @@ module.exports = {
     userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
   },
   userAttack: async function (thread, turn, userGawd, cpuGawd) {
+    // Make the buttons to apply to the embed message
+    const buttons = getPowersButtons(userGawd.availablePowers);
+    const rowArray = getPowersRow(buttons);
+    // Make the user attack combat Embed
+    console.log('available powers');
+    console.log(userGawd.availablePowers);
     const userPowerEmbedFields = getPowerEmbedFields(userGawd.availablePowers);
     const attackEmbed = new MessageEmbed()
       .setColor('#22C55E')
@@ -76,6 +103,6 @@ module.exports = {
         { name: '\u200B', value: '**Available Powers**' },
         userPowerEmbedFields
       );
-    await thread.send({ embeds: [attackEmbed] });
+    await thread.send({ embeds: [attackEmbed], components: rowArray });
   },
 };
