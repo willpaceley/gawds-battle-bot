@@ -35,10 +35,18 @@ function getPowersButtons(availablePowers) {
 }
 
 function getPowersRow(buttonsArray) {
-  // const powerRowArray = []
-  // There can only be 5 buttons in an ActionRow
-  // TODO: Handle for this later
-  return [new MessageActionRow().addComponents(buttonsArray)];
+  // Note: There can't be more than 5 buttons per row
+  // For formatting, only display 4 buttons per row
+  if (buttonsArray.length > 4) {
+    // Split buttons into two rows
+    const rowOne = new MessageActionRow().addComponents(
+      buttonsArray.slice(0, 4)
+    );
+    const rowTwo = new MessageActionRow().addComponents(buttonsArray.slice(4));
+    return [rowOne, rowTwo];
+  } else {
+    return [new MessageActionRow().addComponents(buttonsArray)];
+  }
 }
 
 module.exports = {
