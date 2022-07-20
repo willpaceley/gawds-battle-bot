@@ -83,8 +83,6 @@ module.exports = {
     const buttons = getPowersButtons(userGawd.availablePowers);
     const rowArray = getPowersRow(buttons);
     // Make the user attack combat Embed
-    console.log('available powers');
-    console.log(userGawd.availablePowers);
     const userPowerEmbedFields = getPowerEmbedFields(userGawd.availablePowers);
     const attackEmbed = new MessageEmbed()
       .setColor('#22C55E')

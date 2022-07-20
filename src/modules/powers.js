@@ -107,7 +107,7 @@ module.exports = {
     cult: cult.Astral,
     passive: passive.crit,
   },
-  Automoton: {
+  Automaton: {
     name: 'Automoton',
     label: '⬡ Automoton',
     icon: '⬡',
