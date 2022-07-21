@@ -63,7 +63,9 @@ module.exports = {
 
       const turn = 1;
       // We need to figure out how to loop while userGawd || cpuGawd health > 0
-      await gameplay.userAttack(thread, turn, userGawd, cpuGawd);
+      console.log(
+        await gameplay.userAttack(interaction, thread, turn, userGawd, cpuGawd)
+      );
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;

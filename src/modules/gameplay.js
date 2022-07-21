@@ -23,9 +23,9 @@ function getPowerEmbedFields(powersArray) {
 function getPowersButtons(availablePowers) {
   return availablePowers.map((power) => {
     // custom ID needs to be unique
-    const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
+    // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
     return new MessageButton()
-      .setCustomId(customId)
+      .setCustomId(power.name)
       .setLabel(
         `${power.count > 1 ? power.count + 'x  ' : ''}
         ${power.cult.icon} ${power.name} `
@@ -86,7 +86,7 @@ module.exports = {
     // Set winner to be the attacker for the first turn
     userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
   },
-  userAttack: async function (thread, turn, userGawd, cpuGawd) {
+  userAttack: async function (interaction, thread, turn, userGawd, cpuGawd) {
     // Make the buttons to apply to the embed message
     const buttons = getPowersButtons(userGawd.availablePowers);
     const rowArray = getPowersRow(buttons);
@@ -109,6 +109,55 @@ module.exports = {
         { name: '\u200B', value: '**Available Powers**' },
         userPowerEmbedFields
       );
-    await thread.send({ embeds: [attackEmbed], components: rowArray });
+
+    const attackMessage = await thread.send({
+      embeds: [attackEmbed],
+      components: rowArray,
+    });
+
+    /* --- COLLECTOR --- */
+    const filter = (i) => {
+      // Only let the user that created the battle click a power
+      return i.user.id === interaction.user.id;
+    };
+
+    return attackMessage
+      .awaitMessageComponent({
+        filter,
+        componentType: 'BUTTON',
+        time: 300000,
+      })
+      .then(async (i) => {
+        // Defer the interaction so the token doesn't expire
+        i.deferUpdate();
+        // Disable buttons
+        buttons.forEach((button) => {
+          button.setDisabled();
+          if (button.customId === i.customId) {
+            console.log(`button customId matched user customId ${i.customId}`);
+            button.setStyle('SUCCESS');
+          }
+        });
+        const updatedRow = new MessageActionRow().addComponents(buttons);
+        await attackMessage.edit({ components: [updatedRow] });
+        await thread.send(`You chose to attack with your ${i.customId} Power!`);
+        return i.customId;
+      })
+      .catch(async (error) => {
+        // Disable buttons and set to red to indicate error
+        buttons.forEach((button) => {
+          button.setDisabled();
+          button.setStyle('DANGER');
+        });
+
+        const errorButtonRow = new MessageActionRow().addComponents(buttons);
+
+        await attackMessage.edit({
+          content: `⚠️ **ERROR** - ${error.message}`,
+          components: [errorButtonRow],
+        });
+
+        throw new Error(error.message);
+      });
   },
 };
