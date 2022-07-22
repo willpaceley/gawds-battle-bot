@@ -1,4 +1,5 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
+const { getButtonClicked } = require('./buttonCollector');
 
 module.exports.getUserResponse = async function (interaction, thread) {
   const headsButton = new MessageButton()
@@ -20,51 +21,7 @@ module.exports.getUserResponse = async function (interaction, thread) {
     components: [row],
   });
 
-  const filter = (i) => {
-    // Only let the user that created the battle click a button
-    return i.user.id === interaction.user.id;
-  };
-
-  return coinFlipMessage
-    .awaitMessageComponent({
-      filter,
-      componentType: 'BUTTON',
-      time: 300000,
-    })
-    .then(async (i) => {
-      // Defer the interaction so the token doesn't expire
-      i.deferUpdate();
-      // Disable buttons
-      buttons.forEach((button) => button.setDisabled());
-      // Display user selection by changing button color to green
-      i.customId === 'heads'
-        ? headsButton.setStyle('SUCCESS')
-        : tailsButton.setStyle('SUCCESS');
-
-      const updatedRow = new MessageActionRow().addComponents(buttons);
-      await coinFlipMessage.edit({
-        content: `You selected **${i.customId}**!`,
-        components: [updatedRow],
-      });
-      await i.editReply(`You selected **${i.customId}**!`);
-      return i.customId;
-    })
-    .catch(async (error) => {
-      // Disable buttons and set to red to indicate error
-      buttons.forEach((button) => {
-        button.setDisabled();
-        button.setStyle('DANGER');
-      });
-
-      const errorButtonRow = new MessageActionRow().addComponents(buttons);
-
-      await coinFlipMessage.edit({
-        content: `⚠️ **ERROR** - ${error.message}`,
-        components: [errorButtonRow],
-      });
-
-      throw new Error(error.message);
-    });
+  await getButtonClicked(interaction, coinFlipMessage, buttons);
 };
 
 // Return true if user won

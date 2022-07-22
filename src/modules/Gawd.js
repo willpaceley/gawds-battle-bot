@@ -12,7 +12,11 @@ function getAvailablePowers(powersArray) {
     // If there's a duplicate power, increase count prop
     // And don't push the duplicate to return array
     if (availablePowers.includes(power)) {
+      console.log(
+        `found duplicate power ${power.name}. Current count: ${power.count}`
+      );
       availablePowers[availablePowers.indexOf(power)].count += 1;
+      console.log(`count should be one more ${power.count}`);
     } else {
       power.count = 1;
       availablePowers.push(power);
