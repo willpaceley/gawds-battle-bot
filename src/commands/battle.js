@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { getCoinFlipWinner } = require('../modules/coinFlip');
 const Gawd = require('../modules/Gawd');
 const gameplay = require('../modules/gameplay');
 
@@ -53,19 +54,24 @@ module.exports = {
       // add user to the battle thread
       await thread.members.add(interaction.user);
 
+      const battle = {
+        interaction,
+        thread,
+        userGawd,
+        cpuGawd,
+        turn: 1,
+      };
+
       // Send VERSUS intro messages to thread
-      await gameplay.sendVersusMessages(thread, userGawd, cpuGawd);
+      await gameplay.sendVersusMessages(battle);
 
       // Flip a coin to determine who goes first
-      const userWon = await gameplay.getCoinFlipWinner(interaction, thread);
+      const userWon = await getCoinFlipWinner(battle);
       // Set initial state of battle based on winner of coin flip
-      await gameplay.setInitialState(thread, userWon, userGawd, cpuGawd);
+      await gameplay.setInitialState(battle, userWon);
 
-      const turn = 1;
       // We need to figure out how to loop while userGawd || cpuGawd health > 0
-      console.log(
-        await gameplay.userAttack(interaction, thread, turn, userGawd, cpuGawd)
-      );
+      await gameplay.userAttack(battle);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;

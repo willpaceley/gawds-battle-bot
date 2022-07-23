@@ -1,7 +1,7 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getButtonClicked } = require('./buttonCollector');
 
-module.exports.getUserResponse = async function (interaction, thread) {
+async function getUserResponse(battle) {
   const headsButton = new MessageButton()
     .setCustomId('heads')
     .setLabel('Heads')
@@ -16,15 +16,30 @@ module.exports.getUserResponse = async function (interaction, thread) {
 
   const row = new MessageActionRow().addComponents([headsButton, tailsButton]);
 
-  const coinFlipMessage = await thread.send({
+  const coinFlipMessage = await battle.thread.send({
     content: '🪙 Select **Heads** or **Tails**. Winner goes first!',
     components: [row],
   });
 
-  await getButtonClicked(interaction, coinFlipMessage, buttons);
-};
+  await getButtonClicked(battle.interaction, coinFlipMessage, buttons);
+}
 
 // Return true if user won
-module.exports.flip = function () {
+function flip() {
   return Math.random() > 0.5 ? 'heads' : 'tails';
+}
+
+module.exports.getCoinFlipWinner = async function (battle) {
+  const userCalledSide = await getUserResponse(battle);
+  await battle.thread.send('*Flipping coin...*');
+  const flipResult = flip();
+  const userWon = userCalledSide === flipResult ? true : false;
+  userWon
+    ? await battle.thread.send(
+        `🎉 The coin landed on **${flipResult}**. You won!`
+      )
+    : await battle.thread.send(
+        `😔 The coin landed on **${flipResult}**. You lost.`
+      );
+  return userWon;
 };

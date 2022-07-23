@@ -1,6 +1,5 @@
 const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
 const { getButtonClicked } = require('./buttonCollector');
-const coinFlip = require('../modules/coinFlip');
 
 // function getRandomType() {
 //   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
@@ -61,65 +60,67 @@ module.exports = {
       reason: 'Time to battle!',
     });
   },
-  sendVersusMessages: async function (thread, userGawd, cpuGawd) {
-    await thread.send(`You selected *${userGawd.name}* as your fighter!`);
-    await thread.send({ embeds: [userGawd.versusEmbed] });
-    await thread.send('**VERSUS**');
-    await thread.send({ embeds: [cpuGawd.versusEmbed] });
-    await thread.send(
-      `The computer selected *${cpuGawd.name}* as your opponent!`
+  sendVersusMessages: async function (battle) {
+    await battle.thread.send(
+      `You selected *${battle.userGawd.name}* as your fighter!`
+    );
+    await battle.thread.send({ embeds: [battle.userGawd.versusEmbed] });
+    await battle.thread.send('**VERSUS**');
+    await battle.thread.send({ embeds: [battle.cpuGawd.versusEmbed] });
+    await battle.thread.send(
+      `The computer selected *${battle.cpuGawd.name}* as your opponent!`
     );
   },
-  getCoinFlipWinner: async function (interaction, thread) {
-    const userCalledSide = await coinFlip.getUserResponse(interaction, thread);
-    await thread.send('*Flipping coin...*');
-    const flipResult = coinFlip.flip();
-    const userWon = userCalledSide === flipResult ? true : false;
-    userWon
-      ? await thread.send(`🎉 The coin landed on **${flipResult}**. You won!`)
-      : await thread.send(`😔 The coin landed on **${flipResult}**. You lost.`);
-    return userWon;
-  },
-  setInitialState: async function (thread, userWon, userGawd, cpuGawd) {
+  setInitialState: async function (battle, userWon) {
     // Add 10 HP to losing Gawd to offset winner's advantage
-    userWon ? (cpuGawd.health += 10) : (userGawd.health += 10);
+    userWon ? (battle.cpuGawd.health += 10) : (battle.userGawd.health += 10);
     const loser = userWon ? "your opponent's Gawd" : 'your Gawd';
-    await thread.send(`Adding 10 HP to ${loser} to offset winner's advantage.`);
+    await battle.thread.send(
+      `Adding 10 HP to ${loser} to offset winner's advantage.`
+    );
     // Set winner to be the attacker for the first turn
-    userWon ? (userGawd.isAttacker = true) : (cpuGawd.isAttacker = true);
+    userWon
+      ? (battle.userGawd.isAttacker = true)
+      : (battle.cpuGawd.isAttacker = true);
   },
-  userAttack: async function (interaction, thread, turn, userGawd, cpuGawd) {
+  userAttack: async function (battle) {
     // Make the buttons to apply to the embed message
-    const buttons = getPowersButtons(userGawd.availablePowers);
+    const buttons = getPowersButtons(battle.userGawd.availablePowers);
     const rowArray = getPowersRow(buttons);
     // Make the user attack combat Embed
-    const userPowerEmbedFields = getPowerEmbedFields(userGawd.availablePowers);
+    const userPowerEmbedFields = getPowerEmbedFields(
+      battle.userGawd.availablePowers
+    );
     const attackEmbed = new MessageEmbed()
       .setColor('#22C55E')
-      .setTitle(`Turn #${turn} - Attacking`)
+      .setTitle(`Turn #${battle.turn} - Attacking`)
       .setDescription(
         'Click on a button below to attack with one of your Powers.'
       )
-      .setThumbnail(userGawd.image)
+      .setThumbnail(battle.userGawd.image)
       .addFields(
-        { name: 'CPU Health', value: `❤️ ${cpuGawd.health}`, inline: true },
+        {
+          name: 'CPU Health',
+          value: `❤️ ${battle.cpuGawd.health}`,
+          inline: true,
+        },
         {
           name: 'CPU Cult',
-          value: cpuGawd.cult.label,
+          value: battle.cpuGawd.cult.label,
           inline: true,
         },
         { name: '\u200B', value: '**Available Powers**' },
         userPowerEmbedFields
       );
 
-    const attackMessage = await thread.send({
+    const attackMessage = await battle.thread.send({
       embeds: [attackEmbed],
       components: rowArray,
     });
 
     /* --- COLLECTOR --- */
     const attackPower = await getButtonClicked(
-      interaction,
+      battle.interaction,
       attackMessage,
       buttons
     );

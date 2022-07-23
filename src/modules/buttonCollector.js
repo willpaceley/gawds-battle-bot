@@ -6,8 +6,6 @@ module.exports.getButtonClicked = async function (
   buttons
 ) {
   const filter = (i) => {
-    // Defer the interaction so the token doesn't expire
-    i.deferUpdate();
     // Only let the user that invoked the battle command click a button
     return i.user.id === interaction.user.id;
   };
@@ -19,8 +17,8 @@ module.exports.getButtonClicked = async function (
       time: 300000,
     })
     .then(async (i) => {
-      // // Defer the interaction so the token doesn't expire
-      // i.deferUpdate();
+      // Defer the interaction so the token doesn't expire
+      i.deferUpdate();
       // Disable buttons and update color of selection
       buttons.forEach((button) => {
         button.setDisabled();
