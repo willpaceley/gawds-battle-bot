@@ -24,7 +24,6 @@ function getPowersButtons(availablePowers) {
   return availablePowers.map((power) => {
     // custom ID needs to be unique
     // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
-    console.log(`Power ${power.name} count: ${power.count}`);
     return new MessageButton()
       .setCustomId(power.name)
       .setLabel(

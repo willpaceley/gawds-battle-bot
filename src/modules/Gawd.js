@@ -3,7 +3,9 @@ const { MessageEmbed } = require('discord.js');
 const powers = require('../modules/powers');
 
 function getPowers(partsArray) {
-  return partsArray.map((part) => powers[part.power]);
+  return partsArray.map((part) => {
+    return { ...powers[part.power] };
+  });
 }
 
 function getAvailablePowers(powersArray) {
@@ -11,12 +13,11 @@ function getAvailablePowers(powersArray) {
   powersArray.forEach((power) => {
     // If there's a duplicate power, increase count prop
     // And don't push the duplicate to return array
-    if (availablePowers.includes(power)) {
-      console.log(
-        `found duplicate power ${power.name}. Current count: ${power.count}`
+    if (availablePowers.find((availPower) => availPower.name === power.name)) {
+      const index = availablePowers.findIndex(
+        (availPower) => availPower.name === power.name
       );
-      availablePowers[availablePowers.indexOf(power)].count += 1;
-      console.log(`count should be one more ${power.count}`);
+      availablePowers[index].count += 1;
     } else {
       power.count = 1;
       availablePowers.push(power);

@@ -23,7 +23,6 @@ module.exports.getButtonClicked = async function (
       buttons.forEach((button) => {
         button.setDisabled();
         if (button.customId === i.customId) {
-          console.log(`button customId matched user customId ${i.customId}`);
           button.setStyle('SUCCESS');
         }
       });
