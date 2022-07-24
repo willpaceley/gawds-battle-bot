@@ -21,7 +21,7 @@ async function getUserResponse(battle) {
     components: [row],
   });
 
-  await getButtonClicked(battle.interaction, coinFlipMessage, buttons);
+  return await getButtonClicked(battle.interaction, coinFlipMessage, buttons);
 }
 
 // Return true if user won
