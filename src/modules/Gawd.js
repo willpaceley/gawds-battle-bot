@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
-const powers = require('../modules/powers');
+const powers = require('../data/powers');
 
 function getPowers(partsArray) {
   return partsArray.map((part) => {
