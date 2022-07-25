@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
+const { getAvailablePowers } = require('./Gawd');
 const { getButtonClicked } = require('./buttonCollector');
 
 // function getRandomType() {
@@ -20,13 +21,13 @@ function getPowerEmbedFields(powersArray) {
   });
 }
 
-function getPowersButtons(availablePowers) {
+function getPowersButtons(gawd) {
   // if availablePowers is empty, repopulate
-  // TODO
-  if (availablePowers.length === 0) {
+  if (gawd.availablePowers.length === 0) {
     console.log('availablePowers is empty. repopulating');
+    gawd.availablePowers = getAvailablePowers(gawd.powers);
   }
-  return availablePowers.map((power) => {
+  return gawd.availablePowers.map((power) => {
     // custom ID needs to be unique
     // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
     return new MessageButton()
@@ -89,7 +90,7 @@ module.exports = {
   },
   userAttack: async function (battle) {
     // Make the buttons to apply to the embed message
-    const buttons = getPowersButtons(battle.userGawd.availablePowers);
+    const buttons = getPowersButtons(battle.userGawd);
     const rowArray = getPowersRow(buttons);
     // Make the user attack combat Embed
     const userPowerEmbedFields = getPowerEmbedFields(

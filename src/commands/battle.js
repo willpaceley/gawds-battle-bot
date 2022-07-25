@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { getCoinFlipWinner } = require('../modules/coinFlip');
-const Gawd = require('../modules/Gawd');
+const { Gawd } = require('../modules/Gawd');
 const gameplay = require('../modules/gameplay');
 
 // Returns a psuedorandom valid Gawd ID

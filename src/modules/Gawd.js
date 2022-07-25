@@ -8,7 +8,11 @@ function getPowers(partsArray) {
   });
 }
 
-function getAvailablePowers(powersArray) {
+function sortByCount(a, b) {
+  return b.count - a.count;
+}
+
+module.exports.getAvailablePowers = function (powersArray) {
   const availablePowers = [];
   powersArray.forEach((power) => {
     // If there's a duplicate power, increase count prop
@@ -26,13 +30,9 @@ function getAvailablePowers(powersArray) {
   // Sort array by count to make highest count buttons display first
   availablePowers.sort(sortByCount);
   return availablePowers;
-}
+};
 
-function sortByCount(a, b) {
-  return b.count - a.count;
-}
-
-module.exports = class Gawd {
+module.exports.Gawd = class {
   constructor(id, isUser = true) {
     this.id = id;
     this.health = 100;
@@ -56,7 +56,7 @@ module.exports = class Gawd {
     this.dominantPower = powers[data.dominantPower];
     this.cult = this.dominantPower.cult;
     this.powers = getPowers(data.parts);
-    this.availablePowers = getAvailablePowers(this.powers);
+    this.availablePowers = module.exports.getAvailablePowers(this.powers);
     this.versusEmbed = this.createVersusEmbed();
   }
 
