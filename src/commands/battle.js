@@ -70,7 +70,7 @@ module.exports = {
       // Set initial state of battle based on winner of coin flip
       await gameplay.setInitialState(battle, userWon);
 
-      // We need to figure out how to loop while userGawd || cpuGawd health > 0
+      // loop until user or CPU wins the battle
       await gameplay.userAttack(battle);
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);

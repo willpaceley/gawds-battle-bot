@@ -21,6 +21,11 @@ function getPowerEmbedFields(powersArray) {
 }
 
 function getPowersButtons(availablePowers) {
+  // if availablePowers is empty, repopulate
+  // TODO
+  if (availablePowers.length === 0) {
+    console.log('availablePowers is empty. repopulating');
+  }
   return availablePowers.map((power) => {
     // custom ID needs to be unique
     // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
@@ -118,11 +123,24 @@ module.exports = {
     });
 
     /* --- COLLECTOR --- */
-    const attackPower = await getButtonClicked(
+    const attackPowerName = await getButtonClicked(
       battle.interaction,
       attackMessage,
       buttons
     );
-    console.log(attackPower);
+
+    const indexOfPower = battle.userGawd.availablePowers.findIndex(
+      (power) => power.name === attackPowerName
+    );
+    const attackPower = battle.userGawd.availablePowers[indexOfPower];
+
+    // Each time user attacks with a power it becomes unavailable
+    // Decrement power count by 1 if there are multiple of same power
+    if (attackPower.count > 1) {
+      attackPower.count--;
+    } else {
+      // Remove power from availablePowers array if there is only one
+      console.log(battle.userGawd.availablePowers.splice(indexOfPower, 1));
+    }
   },
 };
