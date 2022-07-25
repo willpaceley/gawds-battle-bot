@@ -1,4 +1,4 @@
-const { MessageActionRow } = require('discord.js');
+const { getPowersRow } = require('./buttonHelpers');
 
 module.exports.getButtonClicked = async function (
   interaction,
@@ -26,8 +26,8 @@ module.exports.getButtonClicked = async function (
           button.setStyle('SUCCESS');
         }
       });
-      const updatedRow = new MessageActionRow().addComponents(buttons);
-      await message.edit({ components: [updatedRow] });
+      const updatedRow = getPowersRow(buttons);
+      await message.edit({ components: updatedRow });
       await i.editReply(`You selected **${i.customId}**!`);
       return i.customId;
     })
@@ -38,11 +38,11 @@ module.exports.getButtonClicked = async function (
         button.setStyle('DANGER');
       });
 
-      const errorButtonRow = new MessageActionRow().addComponents(buttons);
+      const errorButtonRow = getPowersRow(buttons);
 
       await message.edit({
         content: `⚠️ **ERROR** - ${error.message}`,
-        components: [errorButtonRow],
+        components: errorButtonRow,
       });
 
       throw new Error(error.message);

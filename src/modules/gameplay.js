@@ -1,5 +1,5 @@
-const { MessageEmbed, MessageButton, MessageActionRow } = require('discord.js');
-const { getAvailablePowers } = require('./Gawd');
+const { MessageEmbed } = require('discord.js');
+const { getPowersButtons, getPowersRow } = require('./buttonHelpers');
 const { getButtonClicked } = require('./buttonCollector');
 
 // function getRandomType() {
@@ -19,40 +19,6 @@ function getPowerEmbedFields(powersArray) {
       inline: shouldBeInline,
     };
   });
-}
-
-function getPowersButtons(gawd) {
-  // if availablePowers is empty, repopulate
-  if (gawd.availablePowers.length === 0) {
-    console.log('availablePowers is empty. repopulating');
-    gawd.availablePowers = getAvailablePowers(gawd.powers);
-  }
-  return gawd.availablePowers.map((power) => {
-    // custom ID needs to be unique
-    // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
-    return new MessageButton()
-      .setCustomId(power.name)
-      .setLabel(
-        `${power.count > 1 ? power.count + 'x  ' : ''}
-        ${power.cult.icon} ${power.name} `
-      )
-      .setStyle('PRIMARY');
-  });
-}
-
-function getPowersRow(buttonsArray) {
-  // Note: There can't be more than 5 buttons per row
-  // For formatting, only display 4 buttons per row
-  if (buttonsArray.length > 4) {
-    // Split buttons into two rows
-    const rowOne = new MessageActionRow().addComponents(
-      buttonsArray.slice(0, 4)
-    );
-    const rowTwo = new MessageActionRow().addComponents(buttonsArray.slice(4));
-    return [rowOne, rowTwo];
-  } else {
-    return [new MessageActionRow().addComponents(buttonsArray)];
-  }
 }
 
 module.exports = {
@@ -141,7 +107,7 @@ module.exports = {
       attackPower.count--;
     } else {
       // Remove power from availablePowers array if there is only one
-      console.log(battle.userGawd.availablePowers.splice(indexOfPower, 1));
+      battle.userGawd.availablePowers.splice(indexOfPower, 1);
     }
   },
 };
