@@ -14,6 +14,20 @@ After starting a new Battle, the bot will create a new Discord Thread and add yo
 
 Each Battle starts with a coin flip to determine who will attack first.
 
+### Attacking
+
+When it is your turn to attack, the bot will display an embed with relevant information about your opponent's Gawd. You will also see additional information about which powers are available for you to attack with, including the passive boosts associated with each attack.
+
+To attack, click on the button beneath the embed that corresponds with the Power you wish to choose. For your convenience and reference, each button also displays the icon of the cult associated with each Power.
+
+After attacking, the bot will display a combat log detailing the results of attacking with the selected power.
+
+### Defending
+
+When it is your turn to defend, you will the option to either **Block** or **Pass**. Blocking negates 100% of the damage inflicted by your opponents attack.
+
+You and your opponent only get 2 blocks per battle. Choose when you block wisely!
+
 ## Game Mechanics
 
 ### Cult Vulnerabilities
@@ -58,3 +72,23 @@ Every Power has an associated **Passive**. A Passive is a boost to your combat t
 | ⬡    | Automoton  | ✨ Astral  | -2.5% Opponent Dodge |
 | ☉    | Numerary   | ✨ Astral  | +2.5 Damage          |
 | ⦓    | Alchemy    | ✨ Astral  | Random Passive       |
+
+### Dominant Power
+
+Each Gawd is assigned a **Dominant Power**. The cult of your Dominant Power determines the cult leanings of your Gawd.
+
+When you attack with your Dominant Power, your attack is boosted with a 10% increase on the base damage.
+
+### Damage Calculations
+
+Every attack goes through the following steps to calculate the final damage to apply to the opposing Gawd each turn.
+
+| Step | Type               | Base Value      | Result                                 |
+| ---- | ------------------ | --------------- | -------------------------------------- |
+| 1    | Block              | Yes or No       | 100% damage mitigation                 |
+| 2    | Hit                | 90% Chance      | If missed, no damage applied           |
+| 3    | Dodge              | 15% Chance      | If dodged, no damage applied           |
+| 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps        |
+| 5    | Dominant Power     | Yes or No       | Base Damage increased by 10%           |
+| 6    | Critical Hit       | 20% Chance      | Damage increased by 15%                |
+| 7    | Cult Vulnerability | +/- 10% Damage  | Final Damage boosted or reduced by 10% |
