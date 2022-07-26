@@ -2,6 +2,9 @@ const { MessageEmbed } = require('discord.js');
 const { getPowersButtons, getPowersRow } = require('./buttonHelpers');
 const { getButtonClicked } = require('./buttonCollector');
 
+// TODO: Call random func from damage calculations during runtime
+// If power.passive === 'random' return powers[getRandomType()] from ./modules/powers
+
 // function getRandomType() {
 //   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
 //   const randomIndex = Math.floor(Math.random() * 5);
@@ -50,11 +53,9 @@ module.exports = {
       `Adding 10 HP to ${loser} to offset winner's advantage.`
     );
     // Set winner to be the attacker for the first turn
-    userWon
-      ? (battle.userGawd.isAttacker = true)
-      : (battle.cpuGawd.isAttacker = true);
+    userWon ? (battle.userAttacking = true) : (battle.userAttacking = false);
   },
-  userAttack: async function (battle) {
+  getUserAttackPower: async function (battle) {
     // Make the buttons to apply to the embed message
     const buttons = getPowersButtons(battle.userGawd);
     const rowArray = getPowersRow(buttons);
@@ -108,6 +109,18 @@ module.exports = {
     } else {
       // Remove power from availablePowers array if there is only one
       battle.userGawd.availablePowers.splice(indexOfPower, 1);
+    }
+
+    return attackPower;
+  },
+  executeAttack: async function (battle, power) {
+    if (battle.userAttacking) {
+      const damage = 25;
+      await battle.thread.send(`You attacked with ${power.name}`);
+      await battle.thread.send(
+        `${battle.cpuGawd.name} was hit with ${damage} damage`
+      );
+      battle.cpuGawd.health -= damage;
     }
   },
 };
