@@ -1,20 +1,10 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow } = require('discord.js');
+const { getCoinFlipButtons } = require('./buttonHelpers');
 const { getButtonClicked } = require('./buttonCollector');
 
 async function getUserResponse(battle) {
-  const headsButton = new MessageButton()
-    .setCustomId('heads')
-    .setLabel('Heads')
-    .setStyle('PRIMARY');
-
-  const tailsButton = new MessageButton()
-    .setCustomId('tails')
-    .setLabel('Tails')
-    .setStyle('PRIMARY');
-
-  const buttons = [headsButton, tailsButton];
-
-  const row = new MessageActionRow().addComponents([headsButton, tailsButton]);
+  const buttons = getCoinFlipButtons();
+  const row = new MessageActionRow().addComponents(buttons);
 
   const coinFlipMessage = await battle.thread.send({
     content: '🪙 Select **Heads** or **Tails**. Winner goes first!',

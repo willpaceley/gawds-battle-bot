@@ -34,3 +34,33 @@ module.exports.getPowersRow = function (buttonsArray) {
     return [new MessageActionRow().addComponents(buttonsArray)];
   }
 };
+
+module.exports.getBlockButtons = function (userGawd) {
+  const blockButton = new MessageButton()
+    .setCustomId('block')
+    .setLabel('Block')
+    .setStyle('PRIMARY');
+
+  if (userGawd.blocks < 1) blockButton.setDisabled();
+
+  const passButton = new MessageButton()
+    .setCustomId('pass')
+    .setLabel('Pass')
+    .setStyle('PRIMARY');
+
+  return [blockButton, passButton];
+};
+
+module.exports.getCoinFlipButtons = function () {
+  const headsButton = new MessageButton()
+    .setCustomId('heads')
+    .setLabel('Heads')
+    .setStyle('PRIMARY');
+
+  const tailsButton = new MessageButton()
+    .setCustomId('tails')
+    .setLabel('Tails')
+    .setStyle('PRIMARY');
+
+  return [headsButton, tailsButton];
+};

@@ -1,5 +1,9 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { getPowersButtons, getPowersRow } = require('./buttonHelpers');
+const { MessageEmbed, MessageActionRow } = require('discord.js');
+const {
+  getPowersButtons,
+  getPowersRow,
+  getBlockButtons,
+} = require('./buttonHelpers');
 const { getButtonClicked } = require('./buttonCollector');
 
 // TODO: Call random func from damage calculations during runtime
@@ -128,22 +132,7 @@ module.exports = {
       `You have **${battle.userGawd.blocks} blocks** remaining.`
     );
 
-    const blockButton = new MessageButton()
-      .setCustomId('block')
-      .setLabel('Block')
-      .setStyle('PRIMARY');
-
-    if (battle.userGawd.blocks < 1) {
-      // If no blocks remaining, disable button
-      blockButton.setDisabled();
-    }
-
-    const passButton = new MessageButton()
-      .setCustomId('pass')
-      .setLabel('Pass')
-      .setStyle('PRIMARY');
-
-    const buttons = [blockButton, passButton];
+    const buttons = getBlockButtons(battle.userGawd);
 
     const row = new MessageActionRow().addComponents(buttons);
 
