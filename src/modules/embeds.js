@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const cults = require('../data/cults');
 
 function getPowerEmbedFields(powersArray) {
   // Display powers as inline if there more than 5
@@ -11,6 +12,24 @@ function getPowerEmbedFields(powersArray) {
       inline: shouldBeInline,
     };
   });
+}
+
+function getCultEmbedFields(powersArray) {
+  const embedFields = [];
+  const cultCounts = {
+    Arcane: 0,
+    Astral: 0,
+    Terrene: 0,
+  };
+  powersArray.forEach((power) => (cultCounts[power.cult.name] += power.count));
+  for (const cult in cultCounts) {
+    embedFields.push({
+      name: cults[cult].label,
+      value: String(cultCounts[cult]),
+      inline: true,
+    });
+  }
+  return embedFields;
 }
 
 module.exports.getAttackEmbed = function (battle) {
@@ -34,6 +53,11 @@ module.exports.getAttackEmbed = function (battle) {
       {
         name: 'CPU Cult',
         value: battle.cpuGawd.cult.label,
+        inline: true,
+      },
+      {
+        name: 'CPU Blocks',
+        value: `${battle.cpuGawd.blocks}`,
         inline: true,
       },
       { name: '\u200B', value: '**Available Powers**' },
@@ -61,4 +85,33 @@ module.exports.getVersusEmbed = function (gawd) {
       }
     )
     .setImage(gawd.image);
+};
+
+module.exports.getDefenseEmbed = function (battle) {
+  return new MessageEmbed()
+    .setColor('#D0034C')
+    .setTitle(`Turn #${battle.turn} - Defending`)
+    .setDescription(
+      'Your opponent is about to attack! Click on a button below to either Block or Pass.'
+    )
+    .setThumbnail(battle.cpuGawd.image)
+    .addFields(
+      {
+        name: 'Your Health',
+        value: `❤️ ${battle.userGawd.health}`,
+        inline: true,
+      },
+      {
+        name: 'Your Cult',
+        value: battle.userGawd.cult.label,
+        inline: true,
+      },
+      {
+        name: 'Your Blocks',
+        value: `${battle.userGawd.blocks}`,
+        inline: true,
+      },
+      { name: '\u200B', value: "**Opponent's Available Powers**" },
+      getCultEmbedFields(battle.cpuGawd.availablePowers)
+    );
 };

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getCoinFlipWinner } = require('../modules/coinFlip');
 const { Gawd } = require('../modules/Gawd');
+const { getCoinFlipWinner } = require('../modules/coinFlip');
 const gameplay = require('../modules/gameplay');
 
 // Returns a psuedorandom valid Gawd ID
@@ -83,6 +83,7 @@ module.exports = {
           await gameplay.getUserBlockChoice(battle);
           battle.userAttacking = true;
         }
+        battle.turn++;
       }
       const userWonBattle = userGawd.health > 0 ? true : false;
       if (userWonBattle) {

@@ -1,5 +1,5 @@
 const { MessageActionRow } = require('discord.js');
-const { getAttackEmbed, getVersusEmbed } = require('./embeds');
+const { getAttackEmbed, getVersusEmbed, getDefenseEmbed } = require('./embeds');
 const {
   getPowersButtons,
   getPowersRow,
@@ -93,16 +93,13 @@ module.exports = {
     }
   },
   getUserBlockChoice: async function (battle) {
-    await battle.thread.send(
-      `You have **${battle.userGawd.blocks} blocks** remaining.`
-    );
-
     const buttons = getBlockButtons(battle.userGawd);
-
     const row = new MessageActionRow().addComponents(buttons);
 
+    const defenseEmbed = getDefenseEmbed(battle);
+
     const blockMessage = await battle.thread.send({
-      content: '🛡️ Your opponent is attacking. Do you want to block this turn?',
+      embeds: [defenseEmbed],
       components: [row],
     });
 
