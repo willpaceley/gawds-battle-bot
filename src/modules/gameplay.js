@@ -1,4 +1,5 @@
-const { MessageEmbed, MessageActionRow } = require('discord.js');
+const { MessageActionRow } = require('discord.js');
+const { getAttackEmbed } = require('./embeds');
 const {
   getPowersButtons,
   getPowersRow,
@@ -14,19 +15,6 @@ const { getButtonClicked } = require('./buttonCollector');
 //   const randomIndex = Math.floor(Math.random() * 5);
 //   return passiveTypes[randomIndex];
 // }
-
-function getPowerEmbedFields(powersArray) {
-  // Display powers as inline if there more than 5
-  const shouldBeInline = powersArray.length > 5;
-  // Create an array of EmbedFields
-  return powersArray.map((power) => {
-    return {
-      name: power.label,
-      value: power.passive.description,
-      inline: shouldBeInline,
-    };
-  });
-}
 
 module.exports = {
   createThread: async function (interaction, id) {
@@ -64,30 +52,7 @@ module.exports = {
     const buttons = getPowersButtons(battle.userGawd);
     const rowArray = getPowersRow(buttons);
     // Make the user attack combat Embed
-    const userPowerEmbedFields = getPowerEmbedFields(
-      battle.userGawd.availablePowers
-    );
-    const attackEmbed = new MessageEmbed()
-      .setColor('#22C55E')
-      .setTitle(`Turn #${battle.turn} - Attacking`)
-      .setDescription(
-        'Click on a button below to attack with one of your Powers.'
-      )
-      .setThumbnail(battle.userGawd.image)
-      .addFields(
-        {
-          name: 'CPU Health',
-          value: `❤️ ${battle.cpuGawd.health}`,
-          inline: true,
-        },
-        {
-          name: 'CPU Cult',
-          value: battle.cpuGawd.cult.label,
-          inline: true,
-        },
-        { name: '\u200B', value: '**Available Powers**' },
-        userPowerEmbedFields
-      );
+    const attackEmbed = getAttackEmbed(battle);
 
     const attackMessage = await battle.thread.send({
       embeds: [attackEmbed],
