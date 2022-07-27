@@ -40,3 +40,25 @@ module.exports.getAttackEmbed = function (battle) {
       userPowerEmbedFields
     );
 };
+
+module.exports.getVersusEmbed = function (gawd) {
+  const color = gawd.isUser ? '#22C55E' : '#D0034C';
+  return new MessageEmbed()
+    .setColor(color)
+    .setTitle(gawd.name)
+    .setURL(`https://www.gawds.xyz/gallery/${gawd.id}`)
+    .addFields(
+      { name: 'ID', value: String(gawd.id), inline: true },
+      {
+        name: 'Cult',
+        value: gawd.cult.label,
+        inline: true,
+      },
+      {
+        name: 'Dominant Power',
+        value: gawd.dominantPower.label,
+        inline: true,
+      }
+    )
+    .setImage(gawd.image);
+};

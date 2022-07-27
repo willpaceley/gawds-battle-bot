@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const { MessageEmbed } = require('discord.js');
 const powers = require('../data/powers');
 
 function getPowers(partsArray) {
@@ -57,28 +56,5 @@ module.exports.Gawd = class {
     this.cult = this.dominantPower.cult;
     this.powers = getPowers(data.parts);
     this.availablePowers = module.exports.getAvailablePowers(this.powers);
-    this.versusEmbed = this.createVersusEmbed();
-  }
-
-  createVersusEmbed() {
-    const color = this.isUser ? '#22C55E' : '#D0034C';
-    return new MessageEmbed()
-      .setColor(color)
-      .setTitle(this.name)
-      .setURL(`https://www.gawds.xyz/gallery/${this.id}`)
-      .addFields(
-        { name: 'ID', value: String(this.id), inline: true },
-        {
-          name: 'Cult',
-          value: this.cult.label,
-          inline: true,
-        },
-        {
-          name: 'Dominant Power',
-          value: this.dominantPower.label,
-          inline: true,
-        }
-      )
-      .setImage(this.image);
   }
 };

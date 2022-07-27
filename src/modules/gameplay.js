@@ -1,5 +1,5 @@
 const { MessageActionRow } = require('discord.js');
-const { getAttackEmbed } = require('./embeds');
+const { getAttackEmbed, getVersusEmbed } = require('./embeds');
 const {
   getPowersButtons,
   getPowersRow,
@@ -30,9 +30,9 @@ module.exports = {
     await battle.thread.send(
       `You selected *${battle.userGawd.name}* as your fighter!`
     );
-    await battle.thread.send({ embeds: [battle.userGawd.versusEmbed] });
+    await battle.thread.send({ embeds: [getVersusEmbed(battle.userGawd)] });
     await battle.thread.send('**VERSUS**');
-    await battle.thread.send({ embeds: [battle.cpuGawd.versusEmbed] });
+    await battle.thread.send({ embeds: [getVersusEmbed(battle.cpuGawd)] });
     await battle.thread.send(
       `The computer selected *${battle.cpuGawd.name}* as your opponent!`
     );
