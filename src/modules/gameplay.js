@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { getPowersButtons, getPowersRow } = require('./buttonHelpers');
 const { getButtonClicked } = require('./buttonCollector');
 
@@ -122,5 +122,42 @@ module.exports = {
       );
       battle.cpuGawd.health -= damage;
     }
+  },
+  getUserBlockChoice: async function (battle) {
+    await battle.thread.send(
+      `You have **${battle.userGawd.blocks} blocks** remaining.`
+    );
+
+    const blockButton = new MessageButton()
+      .setCustomId('block')
+      .setLabel('Block')
+      .setStyle('PRIMARY');
+
+    if (battle.userGawd.blocks < 1) {
+      // If no blocks remaining, disable button
+      blockButton.setDisabled();
+    }
+
+    const passButton = new MessageButton()
+      .setCustomId('pass')
+      .setLabel('Pass')
+      .setStyle('PRIMARY');
+
+    const buttons = [blockButton, passButton];
+
+    const row = new MessageActionRow().addComponents(buttons);
+
+    const blockMessage = await battle.thread.send({
+      content: '🛡️ Your opponent is attacking. Do you want to block this turn?',
+      components: [row],
+    });
+
+    const choice = await getButtonClicked(
+      battle.interaction,
+      blockMessage,
+      buttons
+    );
+    if (choice === 'block') battle.userGawd.blocks--;
+    return choice;
   },
 };

@@ -74,15 +74,13 @@ module.exports = {
       while (userGawd.health > 0 && cpuGawd.health > 0) {
         // keep game state as props in the Gawd or battle objects
         // Add Gawd.isBlocking property to track that state
-        // return full power object from userAttack()
-        // gameplay executeTurn() function that updates the Gawd object states
         // TODO: Next stage - just add damage. build the simple minimum viable demo
         if (battle.userAttacking) {
           const power = await gameplay.getUserAttackPower(battle);
           await gameplay.executeAttack(battle, power);
           battle.userAttacking = false;
         } else {
-          await battle.thread.send('user is currently the defender');
+          await gameplay.getUserBlockChoice(battle);
           battle.userAttacking = true;
         }
       }
