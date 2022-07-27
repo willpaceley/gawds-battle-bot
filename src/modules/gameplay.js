@@ -4,7 +4,7 @@ const {
   getPowersButtons,
   getPowersRow,
   getBlockButtons,
-} = require('./buttonHelpers');
+} = require('./buttons');
 const { getButtonClicked } = require('./buttonCollector');
 
 // TODO: Call random func from damage calculations during runtime

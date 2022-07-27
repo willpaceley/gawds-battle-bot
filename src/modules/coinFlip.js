@@ -1,5 +1,5 @@
 const { MessageActionRow } = require('discord.js');
-const { getCoinFlipButtons } = require('./buttonHelpers');
+const { getCoinFlipButtons } = require('./buttons');
 const { getButtonClicked } = require('./buttonCollector');
 
 async function getUserResponse(battle) {

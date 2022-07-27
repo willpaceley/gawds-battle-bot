@@ -1,4 +1,4 @@
-const { getPowersRow } = require('./buttonHelpers');
+const { getPowersRow } = require('./buttons');
 
 module.exports.getButtonClicked = async function (
   interaction,
