@@ -16,12 +16,10 @@ function getPowerEmbedFields(powersArray) {
 
 function getCultEmbedFields(powersArray) {
   const embedFields = [];
-  const cultCounts = {
-    Arcane: 0,
-    Astral: 0,
-    Terrene: 0,
-  };
+  const cultCounts = { Arcane: 0, Astral: 0, Terrene: 0 };
+  // Count distribution of cult leanings of available powers
   powersArray.forEach((power) => (cultCounts[power.cult.name] += power.count));
+  // Create an embed field for each cult indicating current distribution
   for (const cult in cultCounts) {
     embedFields.push({
       name: cults[cult].label,
