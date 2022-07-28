@@ -16,7 +16,7 @@ module.exports.getButtonClicked = async function (
     .awaitMessageComponent({
       filter,
       componentType: 'BUTTON',
-      time: 300000,
+      // time: 300000,
     })
     .then(async (i) => {
       // Disable buttons and update color of selection

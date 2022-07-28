@@ -1,39 +1,19 @@
 const { MessageEmbed } = require('discord.js');
-const cults = require('../data/cults');
 
-function getPowerEmbedFields(powersArray) {
-  // Display powers as inline if there more than 5
-  const shouldBeInline = powersArray.length > 5;
+function getPowerEmbedFields(gawd) {
   // Create an array of EmbedFields
-  return powersArray.map((power) => {
+  return gawd.availablePowers.map((power) => {
     return {
-      name: `${power.cult.icon} ${power.name}`,
+      name: `${power.cult.icon} ${power.name}${
+        power.name === gawd.dominantPower.name ? ' *' : ''
+      }`,
       value: power.passive.description,
-      inline: shouldBeInline,
     };
   });
 }
 
-function getCultEmbedFields(powersArray) {
-  const embedFields = [];
-  const cultCounts = { Arcane: 0, Astral: 0, Terrene: 0 };
-  // Count distribution of cult leanings of available powers
-  powersArray.forEach((power) => (cultCounts[power.cult.name] += power.count));
-  // Create an embed field for each cult indicating current distribution
-  for (const cult in cultCounts) {
-    embedFields.push({
-      name: cults[cult].label,
-      value: String(cultCounts[cult]),
-      inline: true,
-    });
-  }
-  return embedFields;
-}
-
 module.exports.getAttackEmbed = function (battle) {
-  const userPowerEmbedFields = getPowerEmbedFields(
-    battle.userGawd.availablePowers
-  );
+  const userPowerEmbedFields = getPowerEmbedFields(battle.userGawd);
 
   return new MessageEmbed()
     .setColor('#22C55E')
@@ -58,7 +38,7 @@ module.exports.getAttackEmbed = function (battle) {
         value: `${battle.cpuGawd.blocks}`,
         inline: true,
       },
-      { name: '\u200B', value: '**Available Powers**' },
+      { name: '\u200B', value: '**Your Available Powers**' },
       userPowerEmbedFields
     );
 };
@@ -110,6 +90,6 @@ module.exports.getDefenseEmbed = function (battle) {
         inline: true,
       },
       { name: '\u200B', value: "**Opponent's Available Powers**" },
-      getCultEmbedFields(battle.cpuGawd.availablePowers)
+      getPowerEmbedFields(battle.cpuGawd)
     );
 };

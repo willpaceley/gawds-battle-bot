@@ -77,7 +77,7 @@ Every Power has an associated **Passive**. A Passive is a boost to your combat t
 
 Each Gawd is assigned a **Dominant Power**. The cult of your Dominant Power determines the cult leanings of your Gawd.
 
-When you attack with your Dominant Power, your attack is boosted with a 10% increase on the base damage.
+**Attacks with a Dominant Power can not be blocked by the opposing Gawd.** Use strategy to determine the best times to use your block and plan your attacks around your opponent's available blocks.
 
 ### Damage Calculations
 

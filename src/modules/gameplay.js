@@ -86,7 +86,7 @@ module.exports = {
   executeAttack: async function (battle, power) {
     if (battle.userAttacking) {
       await battle.thread.send(`⚔️ You attacked with **${power.name}** power!`);
-      const damage = await calculateDamage(battle);
+      const damage = await calculateDamage(battle, power);
       await await battle.thread.send(
         `**${damage} damage** applied to *${battle.cpuGawd.name}*`
       );
