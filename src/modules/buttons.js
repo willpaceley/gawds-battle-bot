@@ -4,15 +4,12 @@ const { getAvailablePowers } = require('./Gawd');
 module.exports.getPowersButtons = function (gawd) {
   // if availablePowers is empty, repopulate
   if (gawd.availablePowers.length === 0) {
-    console.log('availablePowers is empty. repopulating');
     gawd.availablePowers = getAvailablePowers(gawd.powers);
   }
   return gawd.availablePowers.map((power) => {
-    // custom ID needs to be unique
-    // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
     return new MessageButton()
       .setCustomId(power.name)
-      .setLabel(`${power.count > 1 ? power.count + 'x  ' : ''}${power.label} `)
+      .setLabel(power.label)
       .setStyle('PRIMARY');
   });
 };

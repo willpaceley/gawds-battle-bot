@@ -4,9 +4,9 @@ function getPowerEmbedFields(gawd) {
   // Create an array of EmbedFields
   return gawd.availablePowers.map((power) => {
     return {
-      name: `${power.cult.icon} ${power.name}${
-        power.name === gawd.dominantPower.name ? ' *' : ''
-      }`,
+      name: `${power.cult.icon} ${
+        power.count > 1 ? ' ' + power.count + 'x ' : ''
+      } ${power.name}${power.name === gawd.dominantPower.name ? '*' : ''}`,
       value: power.passive.description,
     };
   });
