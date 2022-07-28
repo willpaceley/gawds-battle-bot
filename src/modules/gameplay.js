@@ -88,7 +88,7 @@ module.exports = {
       await battle.thread.send(`⚔️ You attacked with **${power.name}** power!`);
       const damage = await calculateDamage(battle);
       await await battle.thread.send(
-        `*${battle.cpuGawd.name}* was hit with ${damage} damage`
+        `**${damage} damage** applied to *${battle.cpuGawd.name}*`
       );
       battle.cpuGawd.health -= damage;
     }

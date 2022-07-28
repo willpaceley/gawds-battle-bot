@@ -7,7 +7,7 @@ function getPowerEmbedFields(powersArray) {
   // Create an array of EmbedFields
   return powersArray.map((power) => {
     return {
-      name: power.label,
+      name: `${power.cult.icon} ${power.name}`,
       value: power.passive.description,
       inline: shouldBeInline,
     };

@@ -12,10 +12,7 @@ module.exports.getPowersButtons = function (gawd) {
     // const customId = `${power.name}${Math.floor(Math.random() * Date.now())}`;
     return new MessageButton()
       .setCustomId(power.name)
-      .setLabel(
-        `${power.count > 1 ? power.count + 'x  ' : ''}
-        ${power.cult.icon} ${power.name} `
-      )
+      .setLabel(`${power.count > 1 ? power.count + 'x  ' : ''}${power.label} `)
       .setStyle('PRIMARY');
   });
 };
