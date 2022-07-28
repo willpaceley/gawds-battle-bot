@@ -37,6 +37,7 @@ module.exports.Gawd = class {
     this.health = 100;
     this.alive = true;
     this.isUser = isUser;
+    this.isBlocking = false;
     this.blocks = 2;
   }
 

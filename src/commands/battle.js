@@ -60,6 +60,7 @@ module.exports = {
         userGawd,
         cpuGawd,
         turn: 1,
+        userAttacking: false,
       };
 
       // Send VERSUS intro messages to thread
@@ -77,6 +78,8 @@ module.exports = {
         // TODO: Next stage - just add damage. build the simple minimum viable demo
         if (battle.userAttacking) {
           const power = await gameplay.getUserAttackPower(battle);
+          cpuGawd.isBlocking = false;
+          if (cpuGawd.blocks > 0) gameplay.getCpuBlockChoice(battle);
           await gameplay.executeAttack(battle, power);
           battle.userAttacking = false;
         } else {

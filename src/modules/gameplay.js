@@ -6,6 +6,7 @@ const {
   getBlockButtons,
 } = require('./buttons');
 const { getButtonClicked } = require('./buttonCollector');
+const { calculateDamage } = require('./combat');
 
 // TODO: Call random func from damage calculations during runtime
 // If power.passive === 'random' return powers[getRandomType()] from ./modules/powers
@@ -84,10 +85,10 @@ module.exports = {
   },
   executeAttack: async function (battle, power) {
     if (battle.userAttacking) {
-      const damage = 25;
-      await battle.thread.send(`You attacked with ${power.name}`);
-      await battle.thread.send(
-        `${battle.cpuGawd.name} was hit with ${damage} damage`
+      await battle.thread.send(`⚔️ You attacked with **${power.name}** power!`);
+      const damage = await calculateDamage(battle);
+      await await battle.thread.send(
+        `*${battle.cpuGawd.name}* was hit with ${damage} damage`
       );
       battle.cpuGawd.health -= damage;
     }
@@ -108,7 +109,15 @@ module.exports = {
       blockMessage,
       buttons
     );
-    if (choice === 'block') battle.userGawd.blocks--;
-    return choice;
+    if (choice === 'block') {
+      battle.userGawd.blocks--;
+      battle.userGawd.isBlocking = true;
+    } else {
+      battle.userGawd.isBlocking = false;
+    }
+  },
+  getCpuBlockChoice: function (battle) {
+    battle.cpuGawd.isBlocking = Math.random() > 0.5;
+    if (battle.cpuGawd.isBlocking) battle.cpuGawd.blocks--;
   },
 };
