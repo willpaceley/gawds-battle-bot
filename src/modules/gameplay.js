@@ -8,15 +8,6 @@ const {
 const { getButtonClicked } = require('./buttonCollector');
 const { calculateDamage } = require('./combat');
 
-// TODO: Call random func from damage calculations during runtime
-// If power.passive === 'random' return powers[getRandomType()] from ./modules/powers
-
-// function getRandomType() {
-//   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
-//   const randomIndex = Math.floor(Math.random() * 5);
-//   return passiveTypes[randomIndex];
-// }
-
 module.exports = {
   createThread: async function (interaction, id) {
     const battleName = `${interaction.user.username}'s Battle - Gawd ${id}`;
@@ -140,7 +131,6 @@ module.exports = {
       attackPower.count--;
     } else {
       // Remove power from availablePowers array if there is only one
-      console.log('removing power from cpu availablePowers array');
       battle.cpuGawd.availablePowers.splice(randomIndex, 1);
     }
 
