@@ -87,10 +87,19 @@ module.exports = {
     if (battle.userAttacking) {
       await battle.thread.send(`⚔️ You attacked with **${power.name}** power!`);
       const damage = await calculateDamage(battle, power);
-      await await battle.thread.send(
+      await battle.thread.send(
         `**${damage} damage** applied to *${battle.cpuGawd.name}*`
       );
       battle.cpuGawd.health -= damage;
+    } else {
+      await battle.thread.send(
+        `⚔️ The computer attacked with **${power.name}** power!`
+      );
+      const damage = await calculateDamage(battle, power);
+      await await battle.thread.send(
+        `**${damage} damage** applied to *${battle.userGawd.name}*`
+      );
+      battle.userGawd.health -= damage;
     }
   },
   getUserBlockChoice: async function (battle) {
@@ -119,5 +128,22 @@ module.exports = {
   getCpuBlockChoice: function (battle) {
     battle.cpuGawd.isBlocking = Math.random() > 0.5;
     if (battle.cpuGawd.isBlocking) battle.cpuGawd.blocks--;
+  },
+  getCpuPowerChoice: function (battle) {
+    const length = battle.cpuGawd.availablePowers.length;
+    const randomIndex = Math.floor(Math.random() * length);
+    const attackPower = battle.cpuGawd.availablePowers[randomIndex];
+
+    // Each time a Gawd attacks with a power it becomes unavailable
+    // Decrement power count by 1 if there are multiple of same power
+    if (attackPower.count > 1) {
+      attackPower.count--;
+    } else {
+      // Remove power from availablePowers array if there is only one
+      console.log('removing power from cpu availablePowers array');
+      battle.cpuGawd.availablePowers.splice(randomIndex, 1);
+    }
+
+    return attackPower;
   },
 };

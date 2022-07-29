@@ -77,13 +77,15 @@ module.exports = {
         // Add Gawd.isBlocking property to track that state
         // TODO: Next stage - just add damage. build the simple minimum viable demo
         if (battle.userAttacking) {
-          const power = await gameplay.getUserAttackPower(battle);
           cpuGawd.isBlocking = false;
+          const power = await gameplay.getUserAttackPower(battle);
           if (cpuGawd.blocks > 0) gameplay.getCpuBlockChoice(battle);
           await gameplay.executeAttack(battle, power);
           battle.userAttacking = false;
         } else {
           await gameplay.getUserBlockChoice(battle);
+          const power = await gameplay.getCpuPowerChoice(battle);
+          await gameplay.executeAttack(battle, power);
           battle.userAttacking = true;
         }
         battle.turn++;
