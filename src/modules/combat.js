@@ -1,8 +1,5 @@
 const passives = require('../data/passives');
 
-// TODO: Call random func from damage calculations during runtime
-// If power.passive === 'random' return powers[getRandomType()] from ./modules/powers
-
 function getRandomType() {
   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
   const randomIndex = Math.floor(Math.random() * 5);
@@ -31,9 +28,18 @@ module.exports.calculateDamage = async function (battle, power) {
   if (passive.type === 'random') {
     passive = passives[getRandomType()];
     await battle.thread.send(
-      `**${power.name}** aquired a random passive: ${passive.description}`
+      `🔀 **${power.name}** aquired a random passive: ${passive.description}`
     );
   }
+
+  // Determine if the attack hit
+  const baseHit = 0.9;
+  const hitChance = passive.type === 'hit' ? baseHit + passive.value : baseHit;
+  if (Math.random() > hitChance) {
+    await battle.thread.send('💨 The attack **missed**!');
+    return 0;
+  }
+
   // TODO: Temporary hard coded value, will return calculated damage
   return 25;
 };

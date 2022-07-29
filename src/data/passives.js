@@ -6,8 +6,8 @@ module.exports = {
   },
   hit: {
     type: 'hit',
-    value: 2.5,
-    description: '+2.5% Hit Chance',
+    value: 0.1,
+    description: '+10% Hit Chance',
   },
   crit: {
     type: 'crit',

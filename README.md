@@ -55,19 +55,19 @@ Every Power has an associated **Passive**. A Passive is a boost to your combat t
 | Icon | Power      | Cult       | Passive              |
 | ---- | ---------- | ---------- | -------------------- |
 | ✧    | Divine     | 🩸 Arcane  | Heal +5 HP           |
-| ⦲    | Chaos      | 🩸 Arcane  | +2.5% Hit Chance     |
+| ⦲    | Chaos      | 🩸 Arcane  | +10% Hit Chance      |
 | ☾    | Mystic     | 🩸 Arcane  | +2.5% Crit Chance    |
 | ❍    | Dark       | 🩸 Arcane  | -2.5% Opponent Dodge |
 | ⧂    | Spirit     | 🩸 Arcane  | +2.5 Damage          |
 | ⨙    | Oblivion   | 🩸 Arcane  | Random Passive       |
 | ⩀    | Corporeal  | 🌙 Terrene | Heal +5 HP           |
-| ⧰    | Creature   | 🌙 Terrene | +2.5% Hit Chance     |
+| ⧰    | Creature   | 🌙 Terrene | +10% Hit Chance      |
 | ❖    | Verdure    | 🌙 Terrene | +2.5% Crit Chance    |
 | ⦵    | Toxic      | 🌙 Terrene | -2.5% Opponent Dodge |
 | ⬙    | Mundane    | 🌙 Terrene | +2.5 Damage          |
 | ⏆    | Aqueous    | 🌙 Terrene | Random Passive       |
 | ✶    | Cosmos     | ✨ Astral  | Heal +5 HP           |
-| ◊    | Inferno    | ✨ Astral  | +2.5% Hit Chance     |
+| ◊    | Inferno    | ✨ Astral  | +10% Hit Chance      |
 | ◍    | Geological | ✨ Astral  | +2.5% Crit Chance    |
 | ⬡    | Automoton  | ✨ Astral  | -2.5% Opponent Dodge |
 | ☉    | Numerary   | ✨ Astral  | +2.5 Damage          |
