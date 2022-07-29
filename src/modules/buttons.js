@@ -1,11 +1,6 @@
 const { MessageButton, MessageActionRow } = require('discord.js');
-const { getAvailablePowers } = require('./Gawd');
 
 module.exports.getPowersButtons = function (gawd) {
-  // if availablePowers is empty, repopulate
-  if (gawd.availablePowers.length === 0) {
-    gawd.availablePowers = getAvailablePowers(gawd.powers);
-  }
   return gawd.availablePowers.map((power) => {
     return new MessageButton()
       .setCustomId(power.name)

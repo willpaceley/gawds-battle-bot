@@ -7,6 +7,7 @@ const {
 } = require('./buttons');
 const { getButtonClicked } = require('./buttonCollector');
 const { calculateDamage } = require('./combat');
+const { getAvailablePowers } = require('./Gawd');
 
 module.exports = {
   createThread: async function (interaction, id) {
@@ -40,6 +41,12 @@ module.exports = {
     userWon ? (battle.userAttacking = true) : (battle.userAttacking = false);
   },
   getUserAttackPower: async function (battle) {
+    // if user has no availablePowers, repopulate
+    if (battle.userGawd.availablePowers.length === 0) {
+      battle.userGawd.availablePowers = getAvailablePowers(
+        battle.userGawd.powers
+      );
+    }
     // Make the buttons to apply to the embed message
     const buttons = getPowersButtons(battle.userGawd);
     const rowArray = getPowersRow(buttons);
@@ -100,6 +107,13 @@ module.exports = {
   getUserBlockChoice: async function (battle) {
     const buttons = getBlockButtons(battle.userGawd);
     const row = new MessageActionRow().addComponents(buttons);
+
+    // if CPU has no availablePowers, repopulate
+    if (battle.cpuGawd.availablePowers.length === 0) {
+      battle.cpuGawd.availablePowers = getAvailablePowers(
+        battle.cpuGawd.powers
+      );
+    }
 
     const defenseEmbed = getDefenseEmbed(battle);
 
