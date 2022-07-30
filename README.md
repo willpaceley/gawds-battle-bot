@@ -12,21 +12,23 @@ After starting a new Battle, the bot will create a new Discord Thread and add yo
 
 ### The Coin Flip
 
-Each Battle starts with a coin flip to determine who will attack first.
+Each Battle starts with a coin flip to determine who will attack first. The losing Gawd is granted 10 additional health to offset the winner's advantage.
 
 ### Attacking
 
 When it is your turn to attack, the bot will display an embed with relevant information about your opponent's Gawd. You will also see additional information about which powers are available for you to attack with, including the passive boosts associated with each attack.
 
-To attack, click on the button beneath the embed that corresponds with the Power you wish to choose. For your convenience and reference, each button also displays the icon of the cult associated with each Power.
+To attack, click on the button beneath the embed that corresponds with the Power you wish to choose.
 
 After attacking, the bot will display a combat log detailing the results of attacking with the selected power.
 
 ### Defending
 
-When it is your turn to defend, you will the option to either **Block** or **Pass**. Blocking negates 100% of the damage inflicted by your opponents attack.
+When it is your turn to defend, you will the option to either **Block** or **Pass**. Blocking prevents 100% of the damage inflicted by your opponents attack.
 
-You and your opponent only get 2 blocks per battle. Choose when you block wisely!
+A block can be negated if the attacker uses their **Dominant Power**.
+
+You and your opponent only get 2 blocks per battle. Choose when you block carefully!
 
 ## Game Mechanics
 
@@ -52,26 +54,26 @@ Each Gawd comes equipped with 4-6 powers. **Powers function as attacks in the Ga
 
 Every Power has an associated **Passive**. A Passive is a boost to your combat that is immediately applied to the damage calculations when you attack with a given Power. There are six different Passives, and all three cults have access to the same six Passives.
 
-| Icon | Power      | Cult       | Passive              |
-| ---- | ---------- | ---------- | -------------------- |
-| ✧    | Divine     | 🩸 Arcane  | Heal +5 HP           |
-| ⦲    | Chaos      | 🩸 Arcane  | +10% Hit Chance      |
-| ☾    | Mystic     | 🩸 Arcane  | +2.5% Crit Chance    |
-| ❍    | Dark       | 🩸 Arcane  | -2.5% Opponent Dodge |
-| ⧂    | Spirit     | 🩸 Arcane  | +2.5 Damage          |
-| ⨙    | Oblivion   | 🩸 Arcane  | Random Passive       |
-| ⩀    | Corporeal  | 🌙 Terrene | Heal +5 HP           |
-| ⧰    | Creature   | 🌙 Terrene | +10% Hit Chance      |
-| ❖    | Verdure    | 🌙 Terrene | +2.5% Crit Chance    |
-| ⦵    | Toxic      | 🌙 Terrene | -2.5% Opponent Dodge |
-| ⬙    | Mundane    | 🌙 Terrene | +2.5 Damage          |
-| ⏆    | Aqueous    | 🌙 Terrene | Random Passive       |
-| ✶    | Cosmos     | ✨ Astral  | Heal +5 HP           |
-| ◊    | Inferno    | ✨ Astral  | +10% Hit Chance      |
-| ◍    | Geological | ✨ Astral  | +2.5% Crit Chance    |
-| ⬡    | Automoton  | ✨ Astral  | -2.5% Opponent Dodge |
-| ☉    | Numerary   | ✨ Astral  | +2.5 Damage          |
-| ⦓    | Alchemy    | ✨ Astral  | Random Passive       |
+| Icon | Power      | Cult       | Passive             |
+| ---- | ---------- | ---------- | ------------------- |
+| ✧    | Divine     | 🩸 Arcane  | Heal +5 HP          |
+| ⦲    | Chaos      | 🩸 Arcane  | +10% Hit Chance     |
+| ☾    | Mystic     | 🩸 Arcane  | +2.5% Crit Chance   |
+| ❍    | Dark       | 🩸 Arcane  | -15% Opponent Dodge |
+| ⧂    | Spirit     | 🩸 Arcane  | +2.5 Damage         |
+| ⨙    | Oblivion   | 🩸 Arcane  | Random Passive      |
+| ⩀    | Corporeal  | 🌙 Terrene | Heal +5 HP          |
+| ⧰    | Creature   | 🌙 Terrene | +10% Hit Chance     |
+| ❖    | Verdure    | 🌙 Terrene | +2.5% Crit Chance   |
+| ⦵    | Toxic      | 🌙 Terrene | -15% Opponent Dodge |
+| ⬙    | Mundane    | 🌙 Terrene | +2.5 Damage         |
+| ⏆    | Aqueous    | 🌙 Terrene | Random Passive      |
+| ✶    | Cosmos     | ✨ Astral  | Heal +5 HP          |
+| ◊    | Inferno    | ✨ Astral  | +10% Hit Chance     |
+| ◍    | Geological | ✨ Astral  | +2.5% Crit Chance   |
+| ⬡    | Automoton  | ✨ Astral  | -15% Opponent Dodge |
+| ☉    | Numerary   | ✨ Astral  | +2.5 Damage         |
+| ⦓    | Alchemy    | ✨ Astral  | Random Passive      |
 
 ### Dominant Power
 
@@ -83,12 +85,11 @@ Each Gawd is assigned a **Dominant Power**. The cult of your Dominant Power dete
 
 Every attack goes through the following steps to calculate the final damage to apply to the opposing Gawd each turn.
 
-| Step | Type               | Base Value      | Result                                 |
-| ---- | ------------------ | --------------- | -------------------------------------- |
-| 1    | Block              | Yes or No       | 100% damage mitigation                 |
-| 2    | Hit                | 90% Chance      | If missed, no damage applied           |
-| 3    | Dodge              | 15% Chance      | If dodged, no damage applied           |
-| 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps        |
-| 5    | Dominant Power     | Yes or No       | Base Damage increased by 10%           |
-| 6    | Critical Hit       | 20% Chance      | Damage increased by 15%                |
-| 7    | Cult Vulnerability | +/- 10% Damage  | Final Damage boosted or reduced by 10% |
+| Step | Type               | Base Value      | Result                             |
+| ---- | ------------------ | --------------- | ---------------------------------- |
+| 1    | Block              | Yes or No       | If blocked, no damage applied      |
+| 2    | Hit                | 90% Chance      | If missed, no damage applied       |
+| 3    | Dodge              | 15% Chance      | If dodged, no damage applied       |
+| 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps    |
+| 5    | Cult Vulnerability | +/- 10% Damage  | Damage increased or reduced by 10% |
+| 6    | Critical Hit       | 20% Chance      | 100% bonus damage                  |

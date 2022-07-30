@@ -16,8 +16,8 @@ module.exports = {
   },
   dodge: {
     type: 'dodge',
-    value: 2.5,
-    description: '-2.5% Opponent Dodge',
+    value: 0.15,
+    description: '-15% Opponent Dodge',
   },
   damage: {
     type: 'damage',
