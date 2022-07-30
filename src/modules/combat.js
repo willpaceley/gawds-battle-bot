@@ -13,8 +13,9 @@ function getRandomType() {
   return passiveTypes[randomIndex];
 }
 
-function getBaseDamage(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
+function getBaseDamage(min, max, passive) {
+  const base = Math.random() * (max - min) + min;
+  return Math.round(base + passive);
 }
 
 module.exports.calculateDamage = async function (battle, power) {
@@ -62,7 +63,17 @@ module.exports.calculateDamage = async function (battle, power) {
   }
 
   // TEST 4: Determine base damage value
-  const damage = getBaseDamage(baseValues.minDamage, baseValues.maxDamage);
+  const passiveDamage = passive.type === 'damage' ? passive.value : 0;
+  if (passiveDamage) {
+    await battle.thread.send(
+      `🔺 The attack's **base damage** was boosted by ${passiveDamage}`
+    );
+  }
+  const damage = getBaseDamage(
+    baseValues.minDamage,
+    baseValues.maxDamage,
+    passiveDamage
+  );
 
   return damage;
 };
