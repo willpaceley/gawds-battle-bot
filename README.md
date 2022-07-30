@@ -59,19 +59,19 @@ Every Power has an associated **Passive**. A Passive is a boost to your combat t
 | ✧    | Divine     | 🩸 Arcane  | +5 Health           |
 | ⦲    | Chaos      | 🩸 Arcane  | +10% Hit Chance     |
 | ☾    | Mystic     | 🩸 Arcane  | +2.5% Crit Chance   |
-| ❍    | Dark       | 🩸 Arcane  | -15% Opponent Dodge |
+| ❍    | Dark       | 🩸 Arcane  | -10% Opponent Dodge |
 | ⧂    | Spirit     | 🩸 Arcane  | +2.5 Damage         |
 | ⨙    | Oblivion   | 🩸 Arcane  | Random Passive      |
 | ⩀    | Corporeal  | 🌙 Terrene | +5 Health           |
 | ⧰    | Creature   | 🌙 Terrene | +10% Hit Chance     |
 | ❖    | Verdure    | 🌙 Terrene | +2.5% Crit Chance   |
-| ⦵    | Toxic      | 🌙 Terrene | -15% Opponent Dodge |
+| ⦵    | Toxic      | 🌙 Terrene | -10% Opponent Dodge |
 | ⬙    | Mundane    | 🌙 Terrene | +2.5 Damage         |
 | ⏆    | Aqueous    | 🌙 Terrene | Random Passive      |
 | ✶    | Cosmos     | ✨ Astral  | +5 Health           |
 | ◊    | Inferno    | ✨ Astral  | +10% Hit Chance     |
 | ◍    | Geological | ✨ Astral  | +2.5% Crit Chance   |
-| ⬡    | Automoton  | ✨ Astral  | -15% Opponent Dodge |
+| ⬡    | Automoton  | ✨ Astral  | -10% Opponent Dodge |
 | ☉    | Numerary   | ✨ Astral  | +2.5 Damage         |
 | ⦓    | Alchemy    | ✨ Astral  | Random Passive      |
 

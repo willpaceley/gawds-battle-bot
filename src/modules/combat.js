@@ -2,7 +2,7 @@ const passives = require('../data/passives');
 
 const baseValues = {
   hit: 0.9,
-  dodge: 0.15,
+  dodge: 0.1,
   minDamage: 10,
   maxDamage: 15,
 };
