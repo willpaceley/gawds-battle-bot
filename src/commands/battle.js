@@ -92,7 +92,9 @@ module.exports = {
       }
       const userWonBattle = userGawd.health > 0 ? true : false;
       if (userWonBattle) {
-        await thread.send('You won the battle! Congratulations!');
+        await thread.send('🏆 You won the battle! Congratulations!');
+      } else {
+        await thread.send('😭 You lost the battle. Feels bad.');
       }
     } catch (error) {
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);

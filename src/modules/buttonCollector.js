@@ -28,7 +28,6 @@ module.exports.getButtonClicked = async function (
       });
       const updatedRow = getPowersRow(buttons);
       await message.edit({ components: updatedRow });
-      await i.editReply(`You selected **${i.customId}**!`);
       return i.customId;
     })
     .catch(async (error) => {

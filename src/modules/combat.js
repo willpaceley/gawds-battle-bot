@@ -3,12 +3,18 @@ const passives = require('../data/passives');
 const baseValues = {
   hit: 0.9,
   dodge: 0.15,
+  minDamage: 10,
+  maxDamage: 15,
 };
 
 function getRandomType() {
   const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
   const randomIndex = Math.floor(Math.random() * 5);
   return passiveTypes[randomIndex];
+}
+
+function getBaseDamage(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
 }
 
 module.exports.calculateDamage = async function (battle, power) {
@@ -55,6 +61,8 @@ module.exports.calculateDamage = async function (battle, power) {
     return 0;
   }
 
-  // TODO: Temporary hard coded value, will return calculated damage
-  return 20;
+  // TEST 4: Determine base damage value
+  const damage = getBaseDamage(baseValues.minDamage, baseValues.maxDamage);
+
+  return damage;
 };
