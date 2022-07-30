@@ -1,8 +1,8 @@
 module.exports = {
   heal: {
-    type: 'heal',
+    type: 'health',
     value: 5,
-    description: 'Heal +5 HP',
+    description: '+5 Health',
   },
   hit: {
     type: 'hit',
