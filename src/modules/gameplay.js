@@ -83,27 +83,11 @@ module.exports = {
   },
   executeAttack: async function (battle, power) {
     if (battle.userAttacking) {
-      await battle.thread.send(`⚔️ You attacked with **${power.name}** power`);
       const damage = await calculateDamage(battle, power);
-      if (damage > 0) {
-        battle.cpuGawd.health -= damage;
-        const health = battle.cpuGawd.health < 0 ? 0 : battle.cpuGawd.health;
-        await battle.thread.send(
-          `**${damage} damage** reduced *${battle.cpuGawd.name}*'s health to ❤️ ${health}`
-        );
-      }
+      battle.cpuGawd.health -= damage;
     } else {
-      await battle.thread.send(
-        `⚔️ The computer attacked with **${power.name}** power`
-      );
       const damage = await calculateDamage(battle, power);
-      if (damage > 0) {
-        battle.userGawd.health -= damage;
-        const health = battle.userGawd.health < 0 ? 0 : battle.userGawd.health;
-        await battle.thread.send(
-          `**${damage} damage** reduced *${battle.userGawd.name}*'s health to ❤️ ${health}`
-        );
-      }
+      battle.userGawd.health -= damage;
     }
   },
   getUserBlockChoice: async function (battle) {

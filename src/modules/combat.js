@@ -21,33 +21,34 @@ function getBaseDamage(min, max, passive) {
 module.exports.calculateDamage = async function (battle, power) {
   const attacker = battle.userAttacking ? battle.userGawd : battle.cpuGawd;
   const defender = battle.userAttacking ? battle.cpuGawd : battle.userGawd;
+
+  // Start the combat log message. combatLog will sent at end of function
+  let combatLog = `⚔️ ${
+    attacker.isUser ? 'You' : 'The computer'
+  } attacked with **${power.name}** power`;
+
   // Get the power's passive ability
   let passive = power.passive;
   // If the passive is random, generate a new one for this turn
   if (passive.type === 'random') {
     passive = passives[getRandomType()];
-    await battle.thread.send(
-      `🎲 **${power.name}** aquired a random passive: ${passive.description}`
-    );
+    combatLog += `\n🎲 **${power.name}** aquired a random passive: ${passive.description}`;
   }
 
   // Check for health passive, add 5 health if present
   if (passive.type === 'health') {
     attacker.health += passive.value;
-    await battle.thread.send(
-      `💉 **+${passive.value} Health** added to *${attacker.name}*`
-    );
+    combatLog += `\n💉 **+${passive.value} Health** added to *${attacker.name}*`;
   }
 
   // TEST 1: Check if the defender is blocking
   if (defender.isBlocking) {
     // Check if the attacker used their Dominant Power
     if (attacker.dominantPower.name === power.name) {
-      await battle.thread.send(
-        `⛔ The **${power.name}** Dominant Power negated an attempt to **block**!`
-      );
+      combatLog += `\n⛔ The **${power.name}** Dominant Power negated an attempt to **block**!`;
     } else {
-      await battle.thread.send('🛡️ The attack was **blocked**!');
+      combatLog += '\n🛡️ The attack was **blocked**!';
+      await battle.thread.send(combatLog);
       return 0;
     }
   }
@@ -56,7 +57,8 @@ module.exports.calculateDamage = async function (battle, power) {
   const hitChance =
     passive.type === 'hit' ? baseValues.hit + passive.value : baseValues.hit;
   if (Math.random() > hitChance) {
-    await battle.thread.send('💨 The attack **missed**!');
+    combatLog += '\n💨 The attack **missed**!';
+    await battle.thread.send(combatLog);
     return 0;
   }
 
@@ -66,7 +68,8 @@ module.exports.calculateDamage = async function (battle, power) {
       ? baseValues.dodge - passive.value
       : baseValues.dodge;
   if (Math.random() < dodgeChance) {
-    await battle.thread.send('🤸 The attack was **dodged**!');
+    combatLog += '\n🤸 The attack was **dodged**!';
+    await battle.thread.send(combatLog);
     return 0;
   }
 
@@ -74,9 +77,7 @@ module.exports.calculateDamage = async function (battle, power) {
   // Check for passive damage boost, apply if present
   const passiveDamage = passive.type === 'damage' ? passive.value : 0;
   if (passiveDamage) {
-    await battle.thread.send(
-      `🔺 The attack's **base damage** was boosted by ${passiveDamage}`
-    );
+    combatLog += `\n🔺 The attack's **base damage** was boosted by ${passiveDamage}`;
   }
   let damage = getBaseDamage(
     baseValues.minDamage,
@@ -87,22 +88,25 @@ module.exports.calculateDamage = async function (battle, power) {
   // TEST 5: Determine cult vulnerability modifiers
   if (power.cult.strongAgainst === defender.cult.name) {
     // Apply 20% damage boost
-    console.log(`Original damage: ${damage}`);
     damage = Math.round(damage * 1.2);
-    console.log(`New damage: ${damage}`);
-    await battle.thread.send(
-      `💪 The **${power.cult.label}** power is strong against the **${defender.cult.label}** Gawd`
-    );
-    await battle.thread.send('A **+20% damage boost** has been applied');
+    combatLog += `\nThe **${power.cult.label}** power is strong against the **${defender.cult.label}** Gawd`;
+    combatLog += '\n📈 Total damage **boosted by 20%**';
   } else if (power.cult.weakAgainst === defender.cult.name) {
-    console.log(`Original damage: ${damage}`);
+    // Apply 20% damage reduction
     damage = Math.round(damage * 0.8);
-    console.log(`New damage: ${damage}`);
-    await battle.thread.send(
-      `👎 The **${power.cult.label}** power is weak against the **${defender.cult.label}** Gawd`
-    );
-    await battle.thread.send('A **-20% damage reduction** has been applied');
+    combatLog += `\nThe **${power.cult.label}** power is weak against the **${defender.cult.label}** Gawd`;
+    combatLog += '\n📉 Total damage **reduced by 20%**';
   }
 
+  // Add final calculated damage to the combat log
+  if (damage > 0) {
+    const health = defender.health - damage < 0 ? 0 : defender.health - damage;
+    combatLog += `\n**${damage} damage** was applied to ${
+      defender.isUser ? 'your' : "the computer's"
+    } Gawd`;
+    combatLog += `\n *${defender.name}* now has ❤️ **${health} health**`;
+  }
+
+  await battle.thread.send(combatLog);
   return damage;
 };

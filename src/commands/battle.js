@@ -84,7 +84,7 @@ module.exports = {
           battle.userAttacking = false;
         } else {
           await gameplay.getUserBlockChoice(battle);
-          const power = await gameplay.getCpuPowerChoice(battle);
+          const power = gameplay.getCpuPowerChoice(battle);
           await gameplay.executeAttack(battle, power);
           battle.userAttacking = true;
         }
