@@ -86,10 +86,11 @@ module.exports = {
       await battle.thread.send(`⚔️ You attacked with **${power.name}** power`);
       const damage = await calculateDamage(battle, power);
       if (damage > 0) {
-        await battle.thread.send(
-          `**${damage} damage** applied to *${battle.cpuGawd.name}*`
-        );
         battle.cpuGawd.health -= damage;
+        const health = battle.cpuGawd.health < 0 ? 0 : battle.cpuGawd.health;
+        await battle.thread.send(
+          `**${damage} damage** reduced *${battle.cpuGawd.name}*'s health to ❤️ ${health}`
+        );
       }
     } else {
       await battle.thread.send(
@@ -97,10 +98,11 @@ module.exports = {
       );
       const damage = await calculateDamage(battle, power);
       if (damage > 0) {
-        await battle.thread.send(
-          `**${damage} damage** applied to *${battle.userGawd.name}*`
-        );
         battle.userGawd.health -= damage;
+        const health = battle.userGawd.health < 0 ? 0 : battle.userGawd.health;
+        await battle.thread.send(
+          `**${damage} damage** reduced *${battle.userGawd.name}*'s health to ❤️ ${health}`
+        );
       }
     }
   },

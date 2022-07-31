@@ -89,7 +89,7 @@ Every attack goes through the following steps to calculate the final damage to a
 | ---- | ------------------ | --------------- | ---------------------------------- |
 | 1    | Block              | Yes or No       | If blocked, no damage applied      |
 | 2    | Hit                | 90% Chance      | If missed, no damage applied       |
-| 3    | Dodge              | 15% Chance      | If dodged, no damage applied       |
+| 3    | Dodge              | 10% Chance      | If dodged, no damage applied       |
 | 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps    |
-| 5    | Cult Vulnerability | +/- 10% Damage  | Damage increased or reduced by 10% |
+| 5    | Cult Vulnerability | +/- 20% Damage  | Damage increased or reduced by 20% |
 | 6    | Critical Hit       | 20% Chance      | 100% bonus damage                  |

@@ -78,11 +78,31 @@ module.exports.calculateDamage = async function (battle, power) {
       `🔺 The attack's **base damage** was boosted by ${passiveDamage}`
     );
   }
-  const damage = getBaseDamage(
+  let damage = getBaseDamage(
     baseValues.minDamage,
     baseValues.maxDamage,
     passiveDamage
   );
+
+  // TEST 5: Determine cult vulnerability modifiers
+  if (power.cult.strongAgainst === defender.cult.name) {
+    // Apply 20% damage boost
+    console.log(`Original damage: ${damage}`);
+    damage = Math.round(damage * 1.2);
+    console.log(`New damage: ${damage}`);
+    await battle.thread.send(
+      `💪 The **${power.cult.label}** power is strong against the **${defender.cult.label}** Gawd`
+    );
+    await battle.thread.send('A **+20% damage boost** has been applied');
+  } else if (power.cult.weakAgainst === defender.cult.name) {
+    console.log(`Original damage: ${damage}`);
+    damage = Math.round(damage * 0.8);
+    console.log(`New damage: ${damage}`);
+    await battle.thread.send(
+      `👎 The **${power.cult.label}** power is weak against the **${defender.cult.label}** Gawd`
+    );
+    await battle.thread.send('A **-20% damage reduction** has been applied');
+  }
 
   return damage;
 };
