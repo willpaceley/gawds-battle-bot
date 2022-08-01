@@ -11,8 +11,8 @@ module.exports = {
   },
   crit: {
     type: 'crit',
-    value: 2.5,
-    description: '+2.5% Crit Chance',
+    value: 0.05,
+    description: '+5% Crit Chance',
   },
   dodge: {
     type: 'dodge',

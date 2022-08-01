@@ -3,6 +3,7 @@ const passives = require('../data/passives');
 const baseValues = {
   hit: 0.9,
   dodge: 0.1,
+  crit: 0.2,
   minDamage: 10,
   maxDamage: 15,
 };
@@ -90,12 +91,20 @@ module.exports.calculateDamage = async function (battle, power) {
     // Apply 20% damage boost
     damage = Math.round(damage * 1.2);
     combatLog += `\nThe **${power.cult.label}** power is strong against the **${defender.cult.label}** Gawd`;
-    combatLog += '\n📈 Total damage **boosted by 20%**';
+    // combatLog += '\n📈 Total damage **boosted by 20%**';
   } else if (power.cult.weakAgainst === defender.cult.name) {
     // Apply 20% damage reduction
     damage = Math.round(damage * 0.8);
     combatLog += `\nThe **${power.cult.label}** power is weak against the **${defender.cult.label}** Gawd`;
-    combatLog += '\n📉 Total damage **reduced by 20%**';
+    // combatLog += '\n📉 Total damage **reduced by 20%**';
+  }
+
+  // TEST 6: Determine is attack is a Critical Strike
+  const critChance =
+    passive.type === 'crit' ? baseValues.crit + passive.value : baseValues.crit;
+  if (Math.random() < critChance) {
+    combatLog += `\n🔪 CRITICAL STRIKE! **100% bonus damage**`;
+    damage *= 2;
   }
 
   // Add final calculated damage to the combat log
@@ -104,7 +113,7 @@ module.exports.calculateDamage = async function (battle, power) {
     combatLog += `\n**${damage} damage** was applied to ${
       defender.isUser ? 'your' : "the computer's"
     } Gawd`;
-    combatLog += `\n *${defender.name}* now has ❤️ **${health} health**`;
+    combatLog += `\n*${defender.name}* now has ❤️ **${health} health**`;
   }
 
   await battle.thread.send(combatLog);

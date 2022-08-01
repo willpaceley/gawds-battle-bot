@@ -69,7 +69,7 @@ module.exports = {
       // Flip a coin to determine who goes first
       const userWon = await getCoinFlipWinner(battle);
       // Set initial state of battle based on winner of coin flip
-      await gameplay.setInitialState(battle, userWon);
+      gameplay.setInitialState(battle, userWon);
 
       // loop until user or CPU wins the battle
       while (userGawd.health > 0 && cpuGawd.health > 0) {

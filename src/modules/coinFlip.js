@@ -21,15 +21,13 @@ function flip() {
 
 module.exports.getCoinFlipWinner = async function (battle) {
   const userCalledSide = await getUserResponse(battle);
-  await battle.thread.send('*Flipping coin...*');
   const flipResult = flip();
   const userWon = userCalledSide === flipResult ? true : false;
-  userWon
-    ? await battle.thread.send(
-        `🎉 The coin landed on **${flipResult}**. You won!`
-      )
-    : await battle.thread.send(
-        `😔 The coin landed on **${flipResult}**. You lost.`
-      );
+  const loser = userWon ? "your opponent's Gawd" : 'your Gawd';
+  let message = userWon
+    ? `🎉 The coin landed on **${flipResult}**. You won!`
+    : `😔 The coin landed on **${flipResult}**. You lost.`;
+  message += `\nAdding ❤️ **10 health** to ${loser} to offset winner's advantage.`;
+  await battle.thread.send(message);
   return userWon;
 };

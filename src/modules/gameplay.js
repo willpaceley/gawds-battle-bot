@@ -20,23 +20,18 @@ module.exports = {
     });
   },
   sendVersusMessages: async function (battle) {
-    await battle.thread.send(
-      `You selected *${battle.userGawd.name}* as your fighter!`
-    );
-    await battle.thread.send({ embeds: [getVersusEmbed(battle.userGawd)] });
-    await battle.thread.send('**VERSUS**');
-    await battle.thread.send({ embeds: [getVersusEmbed(battle.cpuGawd)] });
-    await battle.thread.send(
-      `The computer selected *${battle.cpuGawd.name}* as your opponent!`
-    );
+    await battle.thread.send({
+      content: `You selected *${battle.userGawd.name}* as your fighter!`,
+      embeds: [getVersusEmbed(battle.userGawd)],
+    });
+    await battle.thread.send({
+      content: `The computer selected *${battle.cpuGawd.name}* as your opponent!`,
+      embeds: [getVersusEmbed(battle.cpuGawd)],
+    });
   },
-  setInitialState: async function (battle, userWon) {
+  setInitialState: function (battle, userWon) {
     // Add 10 HP to losing Gawd to offset winner's advantage
     userWon ? (battle.cpuGawd.health += 10) : (battle.userGawd.health += 10);
-    const loser = userWon ? "your opponent's Gawd" : 'your Gawd';
-    await battle.thread.send(
-      `Adding 10 HP to ${loser} to offset winner's advantage.`
-    );
     // Set winner to be the attacker for the first turn
     userWon ? (battle.userAttacking = true) : (battle.userAttacking = false);
   },
