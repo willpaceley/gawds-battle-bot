@@ -73,9 +73,6 @@ module.exports = {
 
       // loop until user or CPU wins the battle
       while (userGawd.health > 0 && cpuGawd.health > 0) {
-        // keep game state as props in the Gawd or battle objects
-        // Add Gawd.isBlocking property to track that state
-        // TODO: Next stage - just add damage. build the simple minimum viable demo
         if (battle.userAttacking) {
           cpuGawd.isBlocking = false;
           const power = await gameplay.getUserAttackPower(battle);

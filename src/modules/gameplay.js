@@ -125,7 +125,9 @@ module.exports = {
       battle.cpuGawd.chanceToBlock += 0.1;
     }
     // Force computer to block if health gets too low
-    if (battle.cpuGawd.health < 25) {
+    if (battle.cpuGawd.health <= 50 && battle.cpuGawd.blocks === 2) {
+      battle.cpuGawd.chanceToBlock = 1;
+    } else if (battle.cpuGawd.health <= 25) {
       battle.cpuGawd.chanceToBlock = 1;
     }
     // Roll to determine block status, Set isBlocking flag

@@ -4,8 +4,8 @@ const baseValues = {
   hit: 0.9,
   dodge: 0.1,
   crit: 0.2,
-  minDamage: 20,
-  maxDamage: 25,
+  minDamage: 17,
+  maxDamage: 22,
 };
 
 function getRandomType() {
