@@ -4,8 +4,8 @@ const baseValues = {
   hit: 0.9,
   dodge: 0.1,
   crit: 0.2,
-  minDamage: 10,
-  maxDamage: 15,
+  minDamage: 20,
+  maxDamage: 25,
 };
 
 function getRandomType() {
@@ -33,7 +33,7 @@ module.exports.calculateDamage = async function (battle, power) {
   // If the passive is random, generate a new one for this turn
   if (passive.type === 'random') {
     passive = passives[getRandomType()];
-    combatLog += `\n🎲 **${power.name}** aquired a random passive: ${passive.description}`;
+    combatLog += `\n🎲 **${power.name}** acquired a random passive: ${passive.description}`;
   }
 
   // Check for health passive, add 5 health if present
@@ -103,17 +103,17 @@ module.exports.calculateDamage = async function (battle, power) {
   const critChance =
     passive.type === 'crit' ? baseValues.crit + passive.value : baseValues.crit;
   if (Math.random() < critChance) {
-    combatLog += `\n🔪 CRITICAL STRIKE! **100% bonus damage**`;
+    combatLog += `\n🔪 **CRITICAL STRIKE!** +100% bonus damage`;
     damage *= 2;
   }
 
   // Add final calculated damage to the combat log
   if (damage > 0) {
     const health = defender.health - damage < 0 ? 0 : defender.health - damage;
-    combatLog += `\n**${damage} damage** was applied to ${
-      defender.isUser ? 'your' : "the computer's"
-    } Gawd`;
-    combatLog += `\n*${defender.name}* now has ❤️ **${health} health**`;
+    combatLog += `\n**${damage} damage** was applied to *${defender.name}*`;
+    combatLog += `\n${
+      defender.isUser ? 'Your' : "The computer's"
+    } Gawd now has ❤️ **${health} health**`;
   }
 
   await battle.thread.send(combatLog);
