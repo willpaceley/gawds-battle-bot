@@ -34,6 +34,10 @@ module.exports = {
     userWon ? (battle.cpuGawd.health += 10) : (battle.userGawd.health += 10);
     // Set winner to be the attacker for the first turn
     userWon ? (battle.userAttacking = true) : (battle.userAttacking = false);
+    // Set flag to indicate if CPU defends on even or odd turns
+    battle.cpuGawd.evenOrOdd = userWon ? 1 : 0;
+    // Set initial CPU chance to block
+    battle.cpuGawd.chanceToBlock = 0.25;
   },
   getUserAttackPower: async function (battle) {
     // if user has no availablePowers, repopulate
@@ -116,8 +120,21 @@ module.exports = {
     }
   },
   getCpuBlockChoice: function (battle) {
-    battle.cpuGawd.isBlocking = Math.random() > 0.5;
-    if (battle.cpuGawd.isBlocking) battle.cpuGawd.blocks--;
+    // Increment chance to block by 10% after the opening turns
+    if (battle.turn % 2 === battle.cpuGawd.evenOrOdd && battle.turn > 2) {
+      battle.cpuGawd.chanceToBlock += 0.1;
+    }
+    // Force computer to block if health gets too low
+    if (battle.cpuGawd.health < 25) {
+      battle.cpuGawd.chanceToBlock = 1;
+    }
+    // Roll to determine block status, Set isBlocking flag
+    battle.cpuGawd.isBlocking = Math.random() < battle.cpuGawd.chanceToBlock;
+    // If computer rolled a block, reduce block count and reset block chance
+    if (battle.cpuGawd.isBlocking) {
+      battle.cpuGawd.blocks--;
+      battle.cpuGawd.chanceToBlock = 0.25;
+    }
   },
   getCpuPowerChoice: function (battle) {
     const length = battle.cpuGawd.availablePowers.length;
