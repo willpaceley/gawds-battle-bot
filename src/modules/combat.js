@@ -86,7 +86,15 @@ module.exports.calculateDamage = async function (battle, power) {
     passiveDamage
   );
 
-  // TEST 5: Determine cult vulnerability modifiers
+  // TEST 5: Determine is attack is a Critical Strike
+  const critChance =
+    passive.type === 'crit' ? baseValues.crit + passive.value : baseValues.crit;
+  if (Math.random() < critChance) {
+    combatLog += `\n🔪 **CRITICAL STRIKE!** +100% bonus damage`;
+    damage *= 2;
+  }
+
+  // TEST 6: Determine cult vulnerability modifiers
   if (power.cult.strongAgainst === defender.cult.name) {
     // Apply 20% damage boost
     damage = Math.round(damage * 1.2);
@@ -97,14 +105,6 @@ module.exports.calculateDamage = async function (battle, power) {
     damage = Math.round(damage * 0.8);
     combatLog += `\nThe **${power.cult.label}** power is weak against the **${defender.cult.label}** Gawd`;
     // combatLog += '\n📉 Total damage **reduced by 20%**';
-  }
-
-  // TEST 6: Determine is attack is a Critical Strike
-  const critChance =
-    passive.type === 'crit' ? baseValues.crit + passive.value : baseValues.crit;
-  if (Math.random() < critChance) {
-    combatLog += `\n🔪 **CRITICAL STRIKE!** +100% bonus damage`;
-    damage *= 2;
   }
 
   // Add final calculated damage to the combat log
