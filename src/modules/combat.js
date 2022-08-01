@@ -36,12 +36,6 @@ module.exports.calculateDamage = async function (battle, power) {
     combatLog += `\n🎲 **${power.name}** acquired a random passive: ${passive.description}`;
   }
 
-  // Check for health passive, add 5 health if present
-  if (passive.type === 'health') {
-    attacker.health += passive.value;
-    combatLog += `\n💉 **+${passive.value} Health** added to *${attacker.name}*`;
-  }
-
   // TEST 1: Check if the defender is blocking
   if (defender.isBlocking) {
     // Check if the attacker used their Dominant Power
@@ -52,6 +46,12 @@ module.exports.calculateDamage = async function (battle, power) {
       await battle.thread.send(combatLog);
       return 0;
     }
+  }
+
+  // Check for health passive, add 5 health if present
+  if (passive.type === 'health') {
+    attacker.health += passive.value;
+    combatLog += `\n💉 **+${passive.value} Health** added to *${attacker.name}*`;
   }
 
   // TEST 2: Determine if the attack hit
