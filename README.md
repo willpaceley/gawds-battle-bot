@@ -2,6 +2,22 @@
 
 Gawds Battle is a simple turn-based battle game played from within a Discord server. To win, the player must use a combination of luck and skill to defeat their computer-controlled opponent. Survive the longest to win your battle!
 
+**Table of Contents**
+
+- [Gawds Battle Discord Bot](#gawds-battle-discord-bot)
+  - [How to Play](#how-to-play)
+    - [Start A New Battle](#start-a-new-battle)
+    - [The Coin Flip](#the-coin-flip)
+    - [Attacking](#attacking)
+    - [Defending](#defending)
+  - [Game Mechanics](#game-mechanics)
+    - [Cult Vulnerabilities](#cult-vulnerabilities)
+    - [Powers](#powers)
+    - [Dominant Power](#dominant-power)
+    - [Damage Calculations](#damage-calculations)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## How to Play
 
 ### Start A New Battle
@@ -93,3 +109,49 @@ Every attack goes through the following steps to calculate the final damage to a
 | 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps    |
 | 5    | Critical Hit       | 20% Chance      | 100% bonus damage                  |
 | 6    | Cult Vulnerability | +/- 20% Damage  | Damage increased or reduced by 20% |
+
+## Set up the Bot
+
+Want to set up your own instance of the Gawds Battle Discord bot? Terrific! Start by cloning this repo and run `npm install` to download the necessary dependencies. The setup process is relatively simple and should only take a few minutes of your time.
+
+### Create a Discord Bot Application
+
+The first step to launching the bot on your own is to create a Discord bot application via the official Discord developer portal.
+
+The discord.js guide has a [terrific walkthrough](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot) on how to create a Discord bot application.
+
+After creating your application, double check that you also added a new bot under the "Bot" section of the Discord developer portal.
+
+### Inviting Your Bot to a Server
+
+Now that you set up the bot application in the step above, next you will need to generate an OAuth2 URL to prompt yourself to invite the bot to a server.
+
+1. Navigate to your [Discord Developer Portal](https://discord.com/developers/applications) and click on your Gawds Battle application
+2. Click on the "OAuth2" section on the left-hand navigation panel, then select the "URL Generator" underneath where you just clicked. Generate a new URL with `bot` and `application.commands` scopes and the `Create Public Threads` and `Send Messages in Threads` bot permissions.
+3. Copy the generated URL, paste it in your browser, then follow the prompts to invite your the bot to a server where you have administrator privileges.
+
+### Set up your .env file
+
+The application uses the [dotenv](https://www.npmjs.com/package/dotenv) NPM package to load enviornment variables from a `.env` file. This file will store sensitive information, like your bot's token, so keep it safe.
+
+Open the `.env.sample` file in the root directory. There are three environment variables that you need to populate before the bot will configure properly. Follow the instructions below to find the proper values for the necessary variables, and be sure to paste them between the `""`.
+
+- `DISCORD_TOKEN` - Go to your Discord Developer Portal, select "Bot" on the left-hand nav bar, press the "Reset Token" button.
+- `CLIENT_ID` - Go to your Discord Developer Portal, select "General Information" on the left-hand nav bar, press the "Copy" button under `Application ID`
+- `GUILD_ID` - Go the Discord server you will run the bot in, right click on the server name in the top-left corner and select "Copy ID"
+
+To find `GUILD_ID` You may need to enable "Developer Mode" in the Advanced settings section of your Discord client.
+
+Once all three enviroment variables have been input, rename the `.env.sample` file to `.env`.
+
+### Launching the Bot
+
+Before running your bot for the first time in a Discord server, you need to register the `/battle` slash command before it will be available for use.
+
+To register slash commands, run `npm run config` in the root directory.
+
+Now you should be ready to take your bot online!
+
+To run a local development enviroment, you can run the bot with [nodemon](https://www.npmjs.com/package/nodemon) by using the `npm run dev` script on your local machine.
+
+To manage the bot in a production enviroment, I use the process manager [pm2](https://www.npmjs.com/package/pm2), which you can run with `npm run start`.

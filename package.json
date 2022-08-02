@@ -5,7 +5,8 @@
   "main": "./src/app.js",
   "scripts": {
     "dev": "nodemon ./src/app.js",
-    "start": "node ./src/app.js",
+    "start": "pm2 start ./src/app.js --name \"Gawds Battle Bot\"",
+    "stop": "pm2 stop ./src/app.js",
     "config": "node ./src/deployCommands.js"
   },
   "repository": {
@@ -23,7 +24,8 @@
     "@discordjs/rest": "^0.5.0",
     "discord-api-types": "^0.33.5",
     "discord.js": "^13.8.0",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "pm2": "^5.2.0"
   },
   "devDependencies": {
     "eslint": "^8.17.0",
