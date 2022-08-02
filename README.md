@@ -135,7 +135,7 @@ Now that you set up the bot application in the step above, next you will need to
 
 ### Set up your .env file
 
-The application uses the [dotenv](https://www.npmjs.com/package/dotenv) NPM package to load enviornment variables from a `.env` file. This file will store sensitive information, like your bot's token, so keep it safe.
+The application uses the [dotenv](https://www.npmjs.com/package/dotenv) NPM package to load environment variables from a `.env` file. This file will store sensitive information, like your bot's token, so keep it safe.
 
 Open the `.env.sample` file in the root directory. There are three environment variables that you need to populate before the bot will configure properly. Follow the instructions below to find the proper values for the necessary variables, and be sure to paste them between the `""`.
 
@@ -145,7 +145,7 @@ Open the `.env.sample` file in the root directory. There are three environment v
 
 To find `GUILD_ID` You may need to enable "Developer Mode" in the Advanced settings section of your Discord client.
 
-Once all three enviroment variables have been input, rename the `.env.sample` file to `.env`.
+Once all three environment variables have been input, rename the `.env.sample` file to `.env`.
 
 ### Launching the Bot
 
@@ -155,6 +155,6 @@ To register slash commands, run `npm run config` in the root directory.
 
 Now you should be ready to take your bot online!
 
-To run a local development enviroment, you can run the bot with [nodemon](https://www.npmjs.com/package/nodemon) by using the `npm run dev` script on your local machine.
+To run a local development environment, you can run the bot with [nodemon](https://www.npmjs.com/package/nodemon) by using the `npm run dev` script on your local machine.
 
-To manage the bot in a production enviroment, I use the process manager [pm2](https://www.npmjs.com/package/pm2), which you can run with `npm run start`.
+To manage the bot in a production environment, I use the process manager [pm2](https://www.npmjs.com/package/pm2), which you can run with `npm run start`.
