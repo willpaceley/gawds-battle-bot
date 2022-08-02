@@ -15,8 +15,11 @@ Gawds Battle is a simple turn-based battle game played from within a Discord ser
     - [Powers](#powers)
     - [Dominant Power](#dominant-power)
     - [Damage Calculations](#damage-calculations)
-
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+  - [Set up the Bot](#set-up-the-bot)
+    - [Create a Discord Bot Application](#create-a-discord-bot-application)
+    - [Inviting Your Bot to a Server](#inviting-your-bot-to-a-server)
+    - [Set up your .env file](#set-up-your-env-file)
+    - [Launching the Bot](#launching-the-bot)
 
 ## How to Play
 
