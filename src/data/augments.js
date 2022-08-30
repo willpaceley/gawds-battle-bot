@@ -27,6 +27,6 @@ module.exports = {
   random: {
     type: 'random',
     value: undefined,
-    description: 'Random Passive',
+    description: 'Random Augment',
   },
 };

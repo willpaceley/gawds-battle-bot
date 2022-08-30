@@ -7,7 +7,7 @@ function getPowerEmbedFields(gawd) {
       name: `${power.cult.icon} ${
         power.count > 1 ? ' ' + power.count + 'x ' : ''
       } ${power.name}${power.name === gawd.dominantPower.name ? '*' : ''}`,
-      value: power.passive.description,
+      value: power.augment.description,
     };
   });
 }

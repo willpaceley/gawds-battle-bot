@@ -1,4 +1,4 @@
-const passives = require('../data/passives');
+const augments = require('../data/augments');
 
 const baseValues = {
   hit: 0.9,
@@ -9,14 +9,14 @@ const baseValues = {
 };
 
 function getRandomType() {
-  const passiveTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
+  const augmentTypes = ['heal', 'hit', 'crit', 'dodge', 'damage'];
   const randomIndex = Math.floor(Math.random() * 5);
-  return passiveTypes[randomIndex];
+  return augmentTypes[randomIndex];
 }
 
-function getBaseDamage(min, max, passive) {
+function getBaseDamage(min, max, augment) {
   const base = Math.random() * (max - min) + min;
-  return Math.round(base + passive);
+  return Math.round(base + augment);
 }
 
 module.exports.calculateDamage = async function (battle, power) {
@@ -28,12 +28,12 @@ module.exports.calculateDamage = async function (battle, power) {
     attacker.isUser ? 'You' : 'The computer'
   } attacked with **${power.name}** power`;
 
-  // Get the power's passive ability
-  let passive = power.passive;
-  // If the passive is random, generate a new one for this turn
-  if (passive.type === 'random') {
-    passive = passives[getRandomType()];
-    combatLog += `\n🎲 **${power.name}** acquired a random passive: ${passive.description}`;
+  // Get the power's augment
+  let augment = power.augment;
+  // If the augment is random, generate a new one for this turn
+  if (augment.type === 'random') {
+    augment = augments[getRandomType()];
+    combatLog += `\n🎲 **${power.name}** acquired a random augment: ${augment.description}`;
   }
 
   // TEST 1: Check if the defender is blocking
@@ -48,15 +48,15 @@ module.exports.calculateDamage = async function (battle, power) {
     }
   }
 
-  // Check for health passive, add 5 health if present
-  if (passive.type === 'health') {
-    attacker.health += passive.value;
-    combatLog += `\n💉 **+${passive.value} Health** added to *${attacker.name}*`;
+  // Check for health augment, add 5 health if present
+  if (augment.type === 'health') {
+    attacker.health += augment.value;
+    combatLog += `\n💉 **+${augment.value} Health** added to *${attacker.name}*`;
   }
 
   // TEST 2: Determine if the attack hit
   const hitChance =
-    passive.type === 'hit' ? baseValues.hit + passive.value : baseValues.hit;
+    augment.type === 'hit' ? baseValues.hit + augment.value : baseValues.hit;
   if (Math.random() > hitChance) {
     combatLog += '\n💨 The attack **missed**!';
     await battle.thread.send(combatLog);
@@ -65,8 +65,8 @@ module.exports.calculateDamage = async function (battle, power) {
 
   // TEST 3: Determine if defender dodged the attack
   const dodgeChance =
-    passive.type === 'dodge'
-      ? baseValues.dodge - passive.value
+    augment.type === 'dodge'
+      ? baseValues.dodge - augment.value
       : baseValues.dodge;
   if (Math.random() < dodgeChance) {
     combatLog += '\n🤸 The attack was **dodged**!';
@@ -75,20 +75,20 @@ module.exports.calculateDamage = async function (battle, power) {
   }
 
   // TEST 4: Determine base damage value
-  // Check for passive damage boost, apply if present
-  const passiveDamage = passive.type === 'damage' ? passive.value : 0;
-  if (passiveDamage) {
-    combatLog += `\n🔺 The attack's **base damage** was boosted by ${passiveDamage}`;
+  // Check for augment damage boost, apply if present
+  const augmentDamage = augment.type === 'damage' ? augment.value : 0;
+  if (augmentDamage) {
+    combatLog += `\n🔺 The attack's **base damage** was boosted by ${augmentDamage}`;
   }
   let damage = getBaseDamage(
     baseValues.minDamage,
     baseValues.maxDamage,
-    passiveDamage
+    augmentDamage
   );
 
   // TEST 5: Determine is attack is a Critical Strike
   const critChance =
-    passive.type === 'crit' ? baseValues.crit + passive.value : baseValues.crit;
+    augment.type === 'crit' ? baseValues.crit + augment.value : baseValues.crit;
   if (Math.random() < critChance) {
     combatLog += `\n🔪 **CRITICAL STRIKE!** +100% bonus damage`;
     damage *= 2;
