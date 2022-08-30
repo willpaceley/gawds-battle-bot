@@ -35,7 +35,7 @@ Each Battle starts with a coin flip to determine who will attack first. The losi
 
 ### Attacking
 
-When it is your turn to attack, the bot will display an embed with relevant information about your opponent's Gawd. You will also see additional information about which powers are available for you to attack with, including the passive boosts associated with each attack.
+When it is your turn to attack, the bot will display an embed with relevant information about your opponent's Gawd. You will also see additional information about which powers are available for you to attack with, including the Augment associated with each attack.
 
 To attack, click on the button beneath the embed that corresponds with the Power you wish to choose.
 
@@ -71,28 +71,28 @@ Each Power (attack) and every Gawd is associated with a cult. It's important to 
 
 Each Gawd comes equipped with 4-6 powers. **Powers function as attacks in the Gawds Battle game.** The powers of each Gawd are determined by their randomly generated traits, so some Gawds may have several duplicates of the same power.
 
-Every Power has an associated **Passive**. A Passive is a boost to your combat that is immediately applied to the damage calculations when you attack with a given Power. There are six different Passives, and all three cults have access to the same six Passives.
+Every Power has an associated **Augment**. A Augment is a boost to your combat that is immediately applied to the damage calculations when you attack with a given Power. There are six different Augments, and all three cults have access to the same six Augments.
 
-| Icon | Power      | Cult       | Passive             |
+| Icon | Power      | Cult       | Augment             |
 | ---- | ---------- | ---------- | ------------------- |
 | ✧    | Divine     | 🩸 Arcane  | +5 Health           |
 | ⦲    | Chaos      | 🩸 Arcane  | +10% Hit Chance     |
 | ☾    | Mystic     | 🩸 Arcane  | +5% Crit Chance     |
 | ❍    | Dark       | 🩸 Arcane  | -10% Opponent Dodge |
 | ⧂    | Spirit     | 🩸 Arcane  | +2.5 Damage         |
-| ⨙    | Oblivion   | 🩸 Arcane  | Random Passive      |
+| ⨙    | Oblivion   | 🩸 Arcane  | Random Augment      |
 | ⩀    | Corporeal  | 🌙 Terrene | +5 Health           |
 | ⧰    | Creature   | 🌙 Terrene | +10% Hit Chance     |
 | ❖    | Verdure    | 🌙 Terrene | +5% Crit Chance     |
 | ⦵    | Toxic      | 🌙 Terrene | -10% Opponent Dodge |
 | ⬙    | Mundane    | 🌙 Terrene | +2.5 Damage         |
-| ⏆    | Aqueous    | 🌙 Terrene | Random Passive      |
+| ⏆    | Aqueous    | 🌙 Terrene | Random Augment      |
 | ✶    | Cosmos     | ✨ Astral  | +5 Health           |
 | ◊    | Inferno    | ✨ Astral  | +10% Hit Chance     |
 | ◍    | Geological | ✨ Astral  | +5% Crit Chance     |
 | ⬡    | Automoton  | ✨ Astral  | -10% Opponent Dodge |
 | ☉    | Numerary   | ✨ Astral  | +2.5 Damage         |
-| ⦓    | Alchemy    | ✨ Astral  | Random Passive      |
+| ⦓    | Alchemy    | ✨ Astral  | Random Augment      |
 
 ### Dominant Power
 
