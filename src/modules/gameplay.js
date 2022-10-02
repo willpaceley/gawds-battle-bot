@@ -139,9 +139,43 @@ module.exports = {
     }
   },
   getCpuPowerChoice: function (battle) {
-    const length = battle.cpuGawd.availablePowers.length;
+    const availablePowers = battle.cpuGawd.availablePowers;
+    const userCult = battle.userGawd.cult;
+
+    // determine if dominant power is available
+    const dominantPower = availablePowers.find(
+      (power) => power.name === battle.cpuGawd.dominantPower.name
+    );
+    console.log(
+      dominantPower
+        ? 'CPU has dominant power available'
+        : 'CPU has dominant power is NOT available'
+    );
+    // determine number of blocks the user has available
+    const userBlocks = battle.userGawd.blocks;
+    console.log(`User currently has ${userBlocks} blocks remaining`);
+    // sort available powers depending on efficacy
+    const best = [];
+    const neutral = [];
+    const worst = [];
+
+    availablePowers.forEach((power) => {
+      // Check how effective the power is against the user's Gawd
+      if (userCult.weakAgainst === power.cult.name) {
+        best.push(power.name);
+      } else if (userCult.strongAgainst === power.cult.name) {
+        worst.push(power.name);
+      } else {
+        neutral.push(power.name);
+      }
+    });
+
+    console.log(worst, neutral, best);
+
+    // Randomly pick an available power to use
+    const length = availablePowers.length;
     const randomIndex = Math.floor(Math.random() * length);
-    const attackPower = battle.cpuGawd.availablePowers[randomIndex];
+    const attackPower = availablePowers[randomIndex];
 
     // Each time a Gawd attacks with a power it becomes unavailable
     // Decrement power count by 1 if there are multiple of same power
