@@ -140,20 +140,50 @@ module.exports = {
   },
   getCpuPowerChoice: function (battle) {
     const availablePowers = battle.cpuGawd.availablePowers;
+    const userBlocks = battle.userGawd.blocks;
     const userCult = battle.userGawd.cult;
 
     // determine if dominant power is available
     const dominantPower = availablePowers.find(
       (power) => power.name === battle.cpuGawd.dominantPower.name
     );
-    console.log(
-      dominantPower
-        ? 'CPU has dominant power available'
-        : 'CPU has dominant power is NOT available'
-    );
-    // determine number of blocks the user has available
-    const userBlocks = battle.userGawd.blocks;
-    console.log(`User currently has ${userBlocks} blocks remaining`);
+
+    // decide whether or not to use dominant power this turn
+    if (dominantPower && userBlocks) {
+      const dpIndex = availablePowers.indexOf(dominantPower);
+
+      // Set starting probability on first CPU attacking turn
+      if (battle.turn === 1 || battle.turn === 2) {
+        const aggressive = Math.random() > 0.5;
+        battle.cpuGawd.chanceToDP = aggressive ? 0.5 : 0.25;
+      }
+
+      console.log(
+        `Current chance to use DP: ${battle.cpuGawd.chanceToDP * 100}%`
+      );
+
+      // Roll to decide whether or not to use dominant power
+      const roll = Math.random();
+      if (roll < battle.cpuGawd.chanceToDP) {
+        console.log('attacking with DP');
+        // If more than one attack stored
+        if (dominantPower.count > 1) {
+          // Decrement count by 1 if there are multiple of same power
+          dominantPower.count--;
+        } else {
+          // Remove power from availablePowers array if there is only one
+          availablePowers.splice(dpIndex, 1);
+        }
+        // reset probability to use dominant power
+        battle.cpuGawd.chanceToDP = 0.25;
+        return dominantPower;
+      } else {
+        console.log('increasing chance to DP by 20%');
+        // Increase chance to use dominant power if roll unsuccessful
+        battle.cpuGawd.chanceToDP += 0.2;
+      }
+    }
+
     // sort available powers depending on efficacy
     const best = [];
     const neutral = [];
@@ -162,15 +192,13 @@ module.exports = {
     availablePowers.forEach((power) => {
       // Check how effective the power is against the user's Gawd
       if (userCult.weakAgainst === power.cult.name) {
-        best.push(power.name);
+        best.push(power);
       } else if (userCult.strongAgainst === power.cult.name) {
-        worst.push(power.name);
+        worst.push(power);
       } else {
-        neutral.push(power.name);
+        neutral.push(power);
       }
     });
-
-    console.log(worst, neutral, best);
 
     // Randomly pick an available power to use
     const length = availablePowers.length;
