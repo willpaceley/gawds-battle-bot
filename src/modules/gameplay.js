@@ -155,7 +155,7 @@ module.exports = {
       // Set starting probability on first CPU attacking turn
       if (battle.turn === 1 || battle.turn === 2) {
         const aggressive = Math.random() > 0.5;
-        battle.cpuGawd.chanceToDP = aggressive ? 0.5 : 0.25;
+        battle.cpuGawd.chanceToDP = aggressive ? 0.33 : 0;
       }
 
       console.log(
@@ -167,8 +167,8 @@ module.exports = {
       if (roll < battle.cpuGawd.chanceToDP) {
         console.log('attacking with DP');
         // If more than one attack stored
+        // Decrement count by 1 if there are multiple of same power
         if (dominantPower.count > 1) {
-          // Decrement count by 1 if there are multiple of same power
           dominantPower.count--;
         } else {
           // Remove power from availablePowers array if there is only one
@@ -184,12 +184,18 @@ module.exports = {
       }
     }
 
-    // sort available powers depending on efficacy
+    // sort available powers into pools by efficacy
     const best = [];
     const neutral = [];
     const worst = [];
 
     availablePowers.forEach((power) => {
+      // if user has blocks remaining, don't put dominant power in pool
+      if (userBlocks > 0 && power.name === dominantPower.name) {
+        console.log('user has blocks remaining, skipping DP from pool');
+        return;
+      }
+
       // Check how effective the power is against the user's Gawd
       if (userCult.weakAgainst === power.cult.name) {
         best.push(power);
@@ -200,10 +206,45 @@ module.exports = {
       }
     });
 
+    // Decide which pool to select a power from
+    // If there are no blocks, always use most effective attacks
+    // If there are blocks remaining, try to use worst attacks first
+    const attackArray = [];
+
+    console.log(`# of User blocks: ${userBlocks}`);
+    if (!userBlocks) {
+      console.log('user has no blocks remaining, using best power');
+      attackArray.push(...best);
+    } else {
+      // Decide if the CPU wants to risk being aggressive
+      const aggressive = Math.random() < 0.25;
+
+      if (aggressive) {
+        console.log('Taking an aggressive attack strategy');
+        if (best.length) {
+          attackArray.push(...best);
+        } else if (best.neutral) {
+          attackArray.push(...neutral);
+        } else {
+          attackArray.push(...worst);
+        }
+      } else {
+        if (worst.length) {
+          attackArray.push(...worst);
+        } else if (neutral.length) {
+          attackArray.push(...neutral);
+        } else {
+          attackArray.push(...best);
+        }
+      }
+    }
+
     // Randomly pick an available power to use
-    const length = availablePowers.length;
+    const length = attackArray.length;
     const randomIndex = Math.floor(Math.random() * length);
-    const attackPower = availablePowers[randomIndex];
+    const attackPower = attackArray[randomIndex];
+
+    console.log(attackPower);
 
     // Each time a Gawd attacks with a power it becomes unavailable
     // Decrement power count by 1 if there are multiple of same power

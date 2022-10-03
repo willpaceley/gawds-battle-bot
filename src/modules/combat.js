@@ -26,7 +26,7 @@ module.exports.calculateDamage = async function (battle, power) {
   // Start the combat log message. combatLog will sent at end of function
   let combatLog = `⚔️ ${
     attacker.isUser ? 'You' : 'The computer'
-  } attacked with **${power.name}** power`;
+  } attacked with **${power.name}** power\n`;
 
   // Get the power's augment
   let augment = power.augment;
@@ -111,7 +111,7 @@ module.exports.calculateDamage = async function (battle, power) {
   if (damage > 0) {
     const health = defender.health - damage < 0 ? 0 : defender.health - damage;
     combatLog += `\n**${damage} damage** was applied to *${defender.name}*`;
-    combatLog += `\n${
+    combatLog += `\n\n${
       defender.isUser ? 'Your' : "The computer's"
     } Gawd now has ❤️ **${health} health**`;
   }
