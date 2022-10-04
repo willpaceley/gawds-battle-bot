@@ -112,18 +112,15 @@ module.exports = {
       blockMessage,
       buttons
     );
-    if (choice === 'block') {
-      battle.userGawd.blocks--;
-      battle.userGawd.isBlocking = true;
-    } else {
-      battle.userGawd.isBlocking = false;
-    }
+
+    return choice === 'block';
   },
   getCpuBlockChoice: function (battle) {
     // Increment chance to block by 10% after the opening turns
     if (battle.turn % 2 === battle.cpuGawd.evenOrOdd && battle.turn > 2) {
       battle.cpuGawd.chanceToBlock += 0.1;
     }
+    console.log(`Current chance to block: ${battle.cpuGawd.chanceToBlock}`);
     // Force computer to block if health gets too low
     if (battle.cpuGawd.health <= 50 && battle.cpuGawd.blocks === 2) {
       battle.cpuGawd.chanceToBlock = 1;
@@ -158,6 +155,12 @@ module.exports = {
         battle.cpuGawd.chanceToDP = aggressive ? 0.33 : 0;
       }
 
+      // Check for possible lethal opportunity
+      if (battle.userGawd.health <= 20) {
+        console.log('The CPU smells blood...');
+        battle.cpuGawd.chanceToDP = 1;
+      }
+
       console.log(
         `Current chance to use DP: ${battle.cpuGawd.chanceToDP * 100}%`
       );
@@ -168,8 +171,15 @@ module.exports = {
         console.log('attacking with DP');
         // If more than one attack stored
         // Decrement count by 1 if there are multiple of same power
-        if (dominantPower.count > 1) {
-          dominantPower.count--;
+        if (battle.cpuGawd.availablePowers[dpIndex].count > 1) {
+          console.log('reducing count of DP by 1');
+          console.log(
+            `Value PRE decrement: ${battle.cpuGawd.availablePowers[dpIndex].count}`
+          );
+          battle.cpuGawd.availablePowers[dpIndex].count--;
+          console.log(
+            `Value POST decrement: ${battle.cpuGawd.availablePowers[dpIndex].count}`
+          );
         } else {
           // Remove power from availablePowers array if there is only one
           availablePowers.splice(dpIndex, 1);
@@ -191,9 +201,11 @@ module.exports = {
 
     availablePowers.forEach((power) => {
       // if user has blocks remaining, don't put dominant power in pool
-      if (userBlocks > 0 && power.name === dominantPower.name) {
-        console.log('user has blocks remaining, skipping DP from pool');
-        return;
+      if (userBlocks && dominantPower) {
+        if (power.name === dominantPower.name) {
+          console.log('user has blocks remaining, skipping DP from pool');
+          return;
+        }
       }
 
       // Check how effective the power is against the user's Gawd
@@ -214,37 +226,50 @@ module.exports = {
     console.log(`# of User blocks: ${userBlocks}`);
     if (!userBlocks) {
       console.log('user has no blocks remaining, using best power');
-      attackArray.push(...best);
+      if (best.length) {
+        console.log('There were powers in the best pool');
+        attackArray.push(...best);
+      } else if (neutral.length) {
+        console.log('There were powers in the neutral pool');
+        attackArray.push(...neutral);
+      } else {
+        console.log('There were powers in the worst pool');
+        attackArray.push(...worst);
+      }
     } else {
       // Decide if the CPU wants to risk being aggressive
-      const aggressive = Math.random() < 0.25;
+      const aggressive = Math.random() < 0.2;
 
       if (aggressive) {
         console.log('Taking an aggressive attack strategy');
         if (best.length) {
+          console.log('There were powers in the best pool');
           attackArray.push(...best);
-        } else if (best.neutral) {
+        } else if (neutral.length) {
+          console.log('There were powers in the neutral pool');
           attackArray.push(...neutral);
         } else {
+          console.log('There were powers in the worst pool');
           attackArray.push(...worst);
         }
       } else {
         if (worst.length) {
+          console.log('There were powers in the worst pool');
           attackArray.push(...worst);
         } else if (neutral.length) {
+          console.log('There were powers in the neutral pool');
           attackArray.push(...neutral);
         } else {
+          console.log('There were powers in the best pool');
           attackArray.push(...best);
         }
       }
     }
 
-    // Randomly pick an available power to use
+    // Pick a power from the appropriate pool
     const length = attackArray.length;
     const randomIndex = Math.floor(Math.random() * length);
     const attackPower = attackArray[randomIndex];
-
-    console.log(attackPower);
 
     // Each time a Gawd attacks with a power it becomes unavailable
     // Decrement power count by 1 if there are multiple of same power
@@ -252,7 +277,8 @@ module.exports = {
       attackPower.count--;
     } else {
       // Remove power from availablePowers array if there is only one
-      battle.cpuGawd.availablePowers.splice(randomIndex, 1);
+      const removalIndex = availablePowers.indexOf(attackPower);
+      availablePowers.splice(removalIndex, 1);
     }
 
     return attackPower;

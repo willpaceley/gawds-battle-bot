@@ -80,9 +80,17 @@ module.exports = {
           await gameplay.executeAttack(battle, power);
           battle.userAttacking = false;
         } else {
-          await gameplay.getUserBlockChoice(battle);
+          const isBlocking = await gameplay.getUserBlockChoice(battle);
+          if (isBlocking) battle.userGawd.isBlocking = true;
+
           const power = gameplay.getCpuPowerChoice(battle);
           await gameplay.executeAttack(battle, power);
+
+          // Reset user isBlocking flag
+          if (battle.userGawd.isBlocking) {
+            battle.userGawd.blocks--;
+            battle.userGawd.isBlocking = false;
+          }
           battle.userAttacking = true;
         }
         battle.turn++;
@@ -94,6 +102,7 @@ module.exports = {
         await thread.send('😭 You lost the battle. Feels bad.');
       }
     } catch (error) {
+      console.error(error);
       await interaction.editReply(`⚠️ **${error.name}** - ${error.message}`);
       return;
     }
