@@ -27,7 +27,7 @@ module.exports.getCoinFlipWinner = async function (battle) {
   let message = userWon
     ? `🎉 The coin landed on **${flipResult}**. You won!`
     : `😔 The coin landed on **${flipResult}**. You lost.`;
-  message += `\nAdding ❤️ **10 health** to ${loser} to offset winner's advantage.`;
+  message += `\n\nAdding ❤️ **10 health** to ${loser} to offset winner's advantage.`;
   await battle.thread.send(message);
   return userWon;
 };

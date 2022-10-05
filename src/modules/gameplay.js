@@ -9,6 +9,36 @@ const { getButtonClicked } = require('./buttonCollector');
 const { calculateDamage } = require('./combat');
 const { getAvailablePowers } = require('./Gawd');
 
+function sortPools(pools, bestToWorst) {
+  const attackArray = [];
+
+  if (bestToWorst) {
+    if (pools.best.length) {
+      console.log('There were powers in the best pool');
+      attackArray.push(...pools.best);
+    } else if (pools.neutral.length) {
+      console.log('There were powers in the neutral pool');
+      attackArray.push(...pools.neutral);
+    } else {
+      console.log('There were powers in the worst pool');
+      attackArray.push(...pools.worst);
+    }
+  } else {
+    if (pools.worst.length) {
+      console.log('There were powers in the worst pool');
+      attackArray.push(...pools.worst);
+    } else if (pools.neutral.length) {
+      console.log('There were powers in the neutral pool');
+      attackArray.push(...pools.neutral);
+    } else {
+      console.log('There were powers in the best pool');
+      attackArray.push(...pools.best);
+    }
+  }
+
+  return attackArray;
+}
+
 module.exports = {
   createThread: async function (interaction, id) {
     const battleName = `${interaction.user.username}'s Battle - Gawd ${id}`;
@@ -37,7 +67,7 @@ module.exports = {
     // Set flag to indicate if CPU defends on even or odd turns
     battle.cpuGawd.evenOrOdd = userWon ? 1 : 0;
     // Set initial CPU chance to block
-    battle.cpuGawd.chanceToBlock = 0.25;
+    battle.cpuGawd.chanceToBlock = 0.2;
   },
   getUserAttackPower: async function (battle) {
     // if user has no availablePowers, repopulate
@@ -116,6 +146,7 @@ module.exports = {
     return choice === 'block';
   },
   getCpuBlockChoice: function (battle) {
+    // TODO: If user has no dominant power, always block
     // Increment chance to block by 10% after the opening turns
     if (battle.turn % 2 === battle.cpuGawd.evenOrOdd && battle.turn > 2) {
       battle.cpuGawd.chanceToBlock += 0.1;
@@ -132,7 +163,7 @@ module.exports = {
     // If computer rolled a block, reduce block count and reset block chance
     if (battle.cpuGawd.isBlocking) {
       battle.cpuGawd.blocks--;
-      battle.cpuGawd.chanceToBlock = 0.25;
+      battle.cpuGawd.chanceToBlock = 0.2;
     }
   },
   getCpuPowerChoice: function (battle) {
@@ -151,8 +182,8 @@ module.exports = {
 
       // Set starting probability on first CPU attacking turn
       if (battle.turn === 1 || battle.turn === 2) {
-        const aggressive = Math.random() > 0.5;
-        battle.cpuGawd.chanceToDP = aggressive ? 0.33 : 0;
+        const aggressive = Math.random() < 0.2;
+        battle.cpuGawd.chanceToDP = aggressive ? 0.5 : 0;
       }
 
       // Check for possible lethal opportunity
@@ -195,9 +226,11 @@ module.exports = {
     }
 
     // sort available powers into pools by efficacy
-    const best = [];
-    const neutral = [];
-    const worst = [];
+    const pools = {
+      best: [],
+      neutral: [],
+      worst: [],
+    };
 
     availablePowers.forEach((power) => {
       // if user has blocks remaining, don't put dominant power in pool
@@ -210,66 +243,38 @@ module.exports = {
 
       // Check how effective the power is against the user's Gawd
       if (userCult.weakAgainst === power.cult.name) {
-        best.push(power);
+        pools.best.push(power);
       } else if (userCult.strongAgainst === power.cult.name) {
-        worst.push(power);
+        pools.worst.push(power);
       } else {
-        neutral.push(power);
+        pools.neutral.push(power);
       }
     });
 
     // Decide which pool to select a power from
     // If there are no blocks, always use most effective attacks
     // If there are blocks remaining, try to use worst attacks first
-    const attackArray = [];
+    let attackArray;
 
     console.log(`# of User blocks: ${userBlocks}`);
     if (!userBlocks) {
       console.log('user has no blocks remaining, using best power');
-      if (best.length) {
-        console.log('There were powers in the best pool');
-        attackArray.push(...best);
-      } else if (neutral.length) {
-        console.log('There were powers in the neutral pool');
-        attackArray.push(...neutral);
-      } else {
-        console.log('There were powers in the worst pool');
-        attackArray.push(...worst);
-      }
+      attackArray = sortPools(pools, true);
     } else {
       // Decide if the CPU wants to risk being aggressive
       const aggressive = Math.random() < 0.2;
-
-      if (aggressive) {
-        console.log('Taking an aggressive attack strategy');
-        if (best.length) {
-          console.log('There were powers in the best pool');
-          attackArray.push(...best);
-        } else if (neutral.length) {
-          console.log('There were powers in the neutral pool');
-          attackArray.push(...neutral);
-        } else {
-          console.log('There were powers in the worst pool');
-          attackArray.push(...worst);
-        }
-      } else {
-        if (worst.length) {
-          console.log('There were powers in the worst pool');
-          attackArray.push(...worst);
-        } else if (neutral.length) {
-          console.log('There were powers in the neutral pool');
-          attackArray.push(...neutral);
-        } else {
-          console.log('There were powers in the best pool');
-          attackArray.push(...best);
-        }
-      }
+      console.log('cpu wants to be aggressive');
+      attackArray = aggressive
+        ? sortPools(pools, true)
+        : sortPools(pools, false);
     }
 
-    // Pick a power from the appropriate pool
+    // Pick a power from the possible attacks chosen by the AI
     const length = attackArray.length;
     const randomIndex = Math.floor(Math.random() * length);
     const attackPower = attackArray[randomIndex];
+
+    console.log(attackArray);
 
     // Each time a Gawd attacks with a power it becomes unavailable
     // Decrement power count by 1 if there are multiple of same power
