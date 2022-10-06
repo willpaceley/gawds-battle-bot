@@ -14,24 +14,18 @@ function sortPools(pools, bestToWorst) {
 
   if (bestToWorst) {
     if (pools.best.length) {
-      console.log('There were powers in the best pool');
       attackArray.push(...pools.best);
     } else if (pools.neutral.length) {
-      console.log('There were powers in the neutral pool');
       attackArray.push(...pools.neutral);
     } else {
-      console.log('There were powers in the worst pool');
       attackArray.push(...pools.worst);
     }
   } else {
     if (pools.worst.length) {
-      console.log('There were powers in the worst pool');
       attackArray.push(...pools.worst);
     } else if (pools.neutral.length) {
-      console.log('There were powers in the neutral pool');
       attackArray.push(...pools.neutral);
     } else {
-      console.log('There were powers in the best pool');
       attackArray.push(...pools.best);
     }
   }
@@ -156,7 +150,6 @@ module.exports = {
     if (battle.turn % 2 === battle.cpuGawd.evenOrOdd && battle.turn > 2) {
       battle.cpuGawd.chanceToBlock += 0.1;
     }
-    console.log(`Current chance to block: ${battle.cpuGawd.chanceToBlock}`);
     // Force computer to block if health gets too low
     if (battle.cpuGawd.health <= 50 && battle.cpuGawd.blocks === 2) {
       battle.cpuGawd.chanceToBlock = 1;
@@ -190,25 +183,16 @@ module.exports = {
       }
 
       // Check for possible lethal opportunity
-      if (battle.userGawd.health <= 20) {
-        console.log('The CPU smells blood...');
-        battle.cpuGawd.chanceToDP = 1;
-      }
-
-      console.log(
-        `Current chance to use DP: ${battle.cpuGawd.chanceToDP * 100}%`
-      );
+      if (battle.userGawd.health <= 20) battle.cpuGawd.chanceToDP = 1;
 
       // Roll to decide whether or not to use dominant power
       const roll = Math.random();
       if (roll < battle.cpuGawd.chanceToDP) {
-        console.log('attacking with DP');
         // reset probability to use dominant power
         battle.cpuGawd.chanceToDP = 0.25;
         consumePower(dominantPower, availablePowers);
         return dominantPower;
       } else {
-        console.log('increasing chance to DP by 20%');
         // Increase chance to use dominant power if roll unsuccessful
         battle.cpuGawd.chanceToDP += 0.2;
       }
@@ -224,10 +208,7 @@ module.exports = {
     availablePowers.forEach((power) => {
       // if user has blocks remaining, don't put dominant power in pool
       if (userBlocks && dominantPower) {
-        if (power.name === dominantPower.name) {
-          console.log('user has blocks remaining, skipping DP from pool');
-          return;
-        }
+        if (power.name === dominantPower.name) return;
       }
 
       // Check how effective the power is against the user's Gawd
@@ -242,26 +223,23 @@ module.exports = {
 
     // Decide which pool to select a power from
     // If there are no blocks, always use most effective attacks
-    // If there are blocks remaining, try to use worst attacks first
+    // If there are blocks remaining, use worst attacks first unless aggressive
     let attackArray;
 
     if (!userBlocks) {
-      console.log('user has no blocks remaining, using best power');
       attackArray = sortPools(pools, true);
     } else {
       // Decide if the CPU wants to risk being aggressive
-      const aggressive = Math.random() < 0.15;
+      const aggressive = Math.random() < 0.2;
       attackArray = aggressive
         ? sortPools(pools, true)
         : sortPools(pools, false);
     }
 
-    // Pick a power from the possible attacks chosen by the AI
+    // Pick a power from the possible attacks chosen by the CPU
     const length = attackArray.length;
     const randomIndex = Math.floor(Math.random() * length);
     const attackPower = attackArray[randomIndex];
-
-    console.log(attackArray);
 
     consumePower(attackPower, availablePowers);
 
