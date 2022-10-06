@@ -262,7 +262,7 @@ module.exports = {
       attackArray = sortPools(pools, true);
     } else {
       // Decide if the CPU wants to risk being aggressive
-      const aggressive = Math.random() < 0.2;
+      const aggressive = Math.random() < 0.15;
       console.log('cpu wants to be aggressive');
       attackArray = aggressive
         ? sortPools(pools, true)

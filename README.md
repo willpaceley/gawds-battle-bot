@@ -110,7 +110,7 @@ Every attack goes through the following steps to calculate the final damage to a
 | 2    | Hit                | 90% Chance      | If missed, no damage applied       |
 | 3    | Dodge              | 10% Chance      | If dodged, no damage applied       |
 | 4    | Damage             | 10 Min - 15 Max | Base Damage used for next steps    |
-| 5    | Critical Hit       | 20% Chance      | 100% bonus damage                  |
+| 5    | Critical Hit       | 20% Chance      | 50% bonus damage                   |
 | 6    | Cult Vulnerability | +/- 20% Damage  | Damage increased or reduced by 20% |
 
 ## Set up the Bot
