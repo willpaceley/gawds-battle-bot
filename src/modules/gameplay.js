@@ -39,6 +39,18 @@ function sortPools(pools, bestToWorst) {
   return attackArray;
 }
 
+function consumePower(power, availablePowers) {
+  // Each time a Gawd attacks with a power it becomes unavailable
+  // Decrement power count by 1 if there are multiple of same power
+  if (power.count > 1) {
+    power.count--;
+  } else {
+    // Remove power from availablePowers array if there is only one
+    const removalIndex = availablePowers.indexOf(power);
+    availablePowers.splice(removalIndex, 1);
+  }
+}
+
 module.exports = {
   createThread: async function (interaction, id) {
     const battleName = `${interaction.user.username}'s Battle - Gawd ${id}`;
@@ -99,14 +111,7 @@ module.exports = {
     );
     const attackPower = battle.userGawd.availablePowers[indexOfPower];
 
-    // Each time user attacks with a power it becomes unavailable
-    // Decrement power count by 1 if there are multiple of same power
-    if (attackPower.count > 1) {
-      attackPower.count--;
-    } else {
-      // Remove power from availablePowers array if there is only one
-      battle.userGawd.availablePowers.splice(indexOfPower, 1);
-    }
+    consumePower(attackPower, battle.userGawd.availablePowers);
 
     return attackPower;
   },
@@ -178,8 +183,6 @@ module.exports = {
 
     // decide whether or not to use dominant power this turn
     if (dominantPower && userBlocks) {
-      const dpIndex = availablePowers.indexOf(dominantPower);
-
       // Set starting probability on first CPU attacking turn
       if (battle.turn === 1 || battle.turn === 2) {
         const aggressive = Math.random() < 0.2;
@@ -200,23 +203,9 @@ module.exports = {
       const roll = Math.random();
       if (roll < battle.cpuGawd.chanceToDP) {
         console.log('attacking with DP');
-        // If more than one attack stored
-        // Decrement count by 1 if there are multiple of same power
-        if (battle.cpuGawd.availablePowers[dpIndex].count > 1) {
-          console.log('reducing count of DP by 1');
-          console.log(
-            `Value PRE decrement: ${battle.cpuGawd.availablePowers[dpIndex].count}`
-          );
-          battle.cpuGawd.availablePowers[dpIndex].count--;
-          console.log(
-            `Value POST decrement: ${battle.cpuGawd.availablePowers[dpIndex].count}`
-          );
-        } else {
-          // Remove power from availablePowers array if there is only one
-          availablePowers.splice(dpIndex, 1);
-        }
         // reset probability to use dominant power
         battle.cpuGawd.chanceToDP = 0.25;
+        consumePower(dominantPower, availablePowers);
         return dominantPower;
       } else {
         console.log('increasing chance to DP by 20%');
@@ -256,14 +245,12 @@ module.exports = {
     // If there are blocks remaining, try to use worst attacks first
     let attackArray;
 
-    console.log(`# of User blocks: ${userBlocks}`);
     if (!userBlocks) {
       console.log('user has no blocks remaining, using best power');
       attackArray = sortPools(pools, true);
     } else {
       // Decide if the CPU wants to risk being aggressive
       const aggressive = Math.random() < 0.15;
-      console.log('cpu wants to be aggressive');
       attackArray = aggressive
         ? sortPools(pools, true)
         : sortPools(pools, false);
@@ -276,15 +263,7 @@ module.exports = {
 
     console.log(attackArray);
 
-    // Each time a Gawd attacks with a power it becomes unavailable
-    // Decrement power count by 1 if there are multiple of same power
-    if (attackPower.count > 1) {
-      attackPower.count--;
-    } else {
-      // Remove power from availablePowers array if there is only one
-      const removalIndex = availablePowers.indexOf(attackPower);
-      availablePowers.splice(removalIndex, 1);
-    }
+    consumePower(attackPower, availablePowers);
 
     return attackPower;
   },

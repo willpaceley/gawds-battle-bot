@@ -91,7 +91,7 @@ module.exports.calculateDamage = async function (battle, power) {
     augment.type === 'crit' ? baseValues.crit + augment.value : baseValues.crit;
   if (Math.random() < critChance) {
     combatLog += `\n🔪 **CRITICAL STRIKE!** +50% bonus damage`;
-    damage *= 1.5;
+    damage = Math.round(damage * 1.5);
   }
 
   // TEST 6: Determine cult vulnerability modifiers

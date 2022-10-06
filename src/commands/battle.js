@@ -95,6 +95,14 @@ module.exports = {
         }
         battle.turn++;
       }
+
+      await thread.send(
+        `\n__FINAL SCORE__\n**You:** ❤️ ${Math.max(
+          0,
+          userGawd.health
+        )} health\n**CPU:** ❤️ ${Math.max(0, cpuGawd.health)} health`
+      );
+
       const userWonBattle = userGawd.health > 0 ? true : false;
       if (userWonBattle) {
         await thread.send('🏆 You won the battle! Congratulations!');
